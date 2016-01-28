@@ -1,0 +1,15 @@
+\begin{tikzpicture}[
+  scale=0.8,
+  node distance = 1.5cm,
+  tnode/.style={circle, text centered, draw=black},
+  lnode/.style={circle, text centered},
+  arw/.style={->, line width=1pt},
+  symline/.style={-, line width=0.8pt}
+  ]
+
+\node [tnode] (w1) {$w_1$};
+\node [lnode, below of=w1] (w01) {$()$};
+
+\draw [arw] (w1) -- node [midway, right] {$b$} (w01);
+
+\end{tikzpicture}

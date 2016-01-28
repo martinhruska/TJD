@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+  scale=0.8,
+  node distance = 1.5cm,
+  tnode/.style={circle, text centered, draw=black},
+  lnode/.style={circle, text centered},
+  arw/.style={->, line width=1pt},
+  symline/.style={-, line width=0.8pt}
+  ]
+
+\node [tnode] (u1) {$u_1$};
+\node [tnode, left of=u1, below of=u1] (u2) {$u_2$};
+\node [left of=u1, below of=u1, above of=u2, right of=u2, yshift=1cm, xshift=0.8cm] (u1u2) {};
+\node [tnode, right of=u1, below of=u1] (u3) {$u_3$};
+\node [left of=u1, below of=u1, above of=u3, right of=u3, yshift=1cm, xshift=-0.8cm] (u1u3) {};
+\node [lnode, below of=u2] (u02) {$()$};
+
+\node [tnode, below of=u3, left of=u3] (u4) {$u_4$};
+\node [left of=u3, below of=u3, above of=u4, right of=u4, yshift=1cm, xshift=0.8cm] (u3u4) {};
+\node [tnode, below of=u3, right of=u3] (u5) {$u_5$};
+\node [left of=u3, below of=u3, above of=u5, right of=u5, yshift=1cm, xshift=-0.8cm] (u3u5) {};
+\node [lnode, below of=u4] (u04) {$()$};
+\node [lnode, below of=u5] (u05) {$()$};
+
+\draw [arw] (u1) -- (u2);
+\draw [arw] (u1) -- (u3);
+\draw [arw] (u2) -- node [midway, right] {$b$} (u02);
+\draw [arw] (u3) -- (u4);
+\draw [arw] (u3) -- (u5);
+\draw [arw] (u4) -- node [midway, right] {$b$} (u04);
+\draw [arw] (u5) -- node [midway, right] {$\overline{2}$} (u05);
+
+\draw [symline] (u1u2) edge [bend right] node [midway, below] {$a$} (u1u3);
+\draw [symline] (u3u4) edge [bend right] node [midway, below] {$a$} (u3u5);
+
+\end{tikzpicture}

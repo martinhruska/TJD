@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  scale=0.8,
+  node distance = 1.5cm,
+  tnode/.style={circle, text centered, draw=black},
+  lnode/.style={circle, text centered},
+  arw/.style={->, line width=1pt},
+  symline/.style={-, line width=0.8pt}
+  ]
+
+\node [tnode] (v1) {$v_1$};
+\node [tnode, left of=v1, below of=v1] (v2) {$v_2$};
+\node [left of=v1, below of=v1, above of=v2, right of=v2, yshift=1cm, xshift=0.8cm] (v1v2) {};
+\node [tnode, right of=v1, below of=v1] (v3) {$v_3$};
+\node [left of=v1, below of=v1, above of=v3, right of=v3, yshift=1cm, xshift=-0.8cm] (v1v3) {};
+\node [lnode, below of=v2] (v02) {$()$};
+\node [lnode, below of=v3] (v03) {$()$};
+
+\draw [arw] (v1) -- (v2);
+\draw [arw] (v1) -- (v3);
+\draw [arw] (v2) -- node [midway, right] {$b$} (v02);
+\draw [arw] (v3) -- node [midway, right] {$\overline{3}$} (v03);
+
+\draw [symline] (v1v2) edge [bend right] node [midway, below] {$a$} (v1v3);
+
+\end{tikzpicture}

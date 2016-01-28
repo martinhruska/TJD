@@ -1,0 +1,59 @@
+\begin{tikzpicture}[
+  scale=0.8,
+  node distance = 1.5cm,
+  tnode/.style={circle, text centered, draw=black},
+  lnode/.style={circle, text centered},
+  arw/.style={->, line width=1pt},
+  symline/.style={-, line width=0.8pt}
+  ]
+
+% tree 1
+
+\node [tnode] (u1) {$u_1$};
+\node [tnode, left of=u1, below of=u1] (u2) {$u_2$};
+\node [left of=u1, below of=u1, above of=u2, right of=u2, yshift=1cm, xshift=0.8cm] (u1u2) {};
+\node [tnode, right of=u1, below of=u1] (u3) {$u_3$};
+\node [left of=u1, below of=u1, above of=u3, right of=u3, yshift=1cm, xshift=-0.8cm] (u1u3) {};
+\node [lnode, below of=u2] (u02) {$()$};
+
+\node [tnode, below of=u3, left of=u3] (u4) {$u_4$};
+\node [left of=u3, below of=u3, above of=u4, right of=u4, yshift=0.8cm, xshift=0.6cm] (u3u4) {};
+\node [lnode, below of=u4] (u04) {$()$};
+
+\node [right of=u3, left of=v1, right of=u1, below of=u1, xshift=1.5cm, yshift=0.13cm] (u3v1) {};
+
+\draw [arw] (u1) -- (u2);
+\draw [arw] (u1) -- (u3);
+\draw [arw] (u2) -- node [midway, right] {$b$} (u02);
+\draw [arw] (u3) -- (u4);
+\draw [arw] (u4) -- node [midway, right] {$b$} (u04);
+
+\draw [symline] (u1u2) edge [bend right] node [midway, below] {$a$} (u1u3);
+
+% tree 2
+\node [tnode, right of=u1, right of=u3] (v1) {$v_1$};
+\node [tnode, left of=v1, below of=v1] (v2) {$v_2$};
+\node [left of=v1, below of=v1, above of=v2, right of=v2, yshift=0.7cm, xshift=0.5cm] (v1v2) {};
+\node [lnode, below of=v2] (v02) {$()$};
+
+\draw [arw] (v1) -- (v2);
+\draw [arw] (v2) -- node [midway, right] {$b$} (v02);
+
+%tree 3
+\node [tnode, right of=v1, xshift=0.5cm] (w1) {$w_1$};
+\node [lnode, below of=w1] (w01) {$()$};
+\node [right of=v1, left of=w1, yshift=0.13cm, xshift=-0.8cm] (v1v3) {};
+
+\draw [arw] (w1) -- node [midway, right] {$b$} (w01);
+
+%\draw [arw] (w1) -- node [midway, right] {$b$} (w01);
+
+%connection
+
+\draw [arw, color=green] (u3) -- (v1);
+\draw [arw, color=green] (v1) -- (w1);
+
+\draw [symline] (u3u4) edge [bend right] node [midway, below] {$a$} (u3v1);
+\draw [symline] (v1v2) edge [bend right] node [midway, below] {$a$} (v1v3);
+
+\end{tikzpicture}

@@ -1,0 +1,117 @@
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{example}{Example}[section]
+\newcommand{\vata}[0]{the VATA library}
+\newcommand{\Vata}[0]{The VATA library}
+\newcommand{\rng}[1]{range(#1)}
+\newcommand{\fagr}[0]{\otimes t_1 \cdots t_n}
+\newcommand{\funcdecl}[3]{#1: #2 \rightarrow #3}
+\newcommand{\subst}[2]{[#1/#2]} %co, za co
+\newcommand{\bexmp}[0]{\vspace{0.2pt}\noindent\rule{\textwidth}{0.4pt}\begin{example}}
+\newcommand{\eexmp}[0]{\end{example}\noindent\rule{\textwidth}{0.6pt}}
+\newcommand{\symset}[0]{\mathbb{S}}
+\newcommand{\instrset}[0]{\mathbb{I}}
+\newcommand{\regs}[0]{\mathbb{G}}
+\newcommand{\regsset}[0]{\{r_1, \ldots, r_m\}}
+\newcommand{\regssub}[2]{\regs [#1 := #2]}
+\newcommand{\regssubmin}[3]{\regs \setminus \{#3\} [#1 := #2]}
+\newcommand{\symstate}[3]{(#1, #2, #3)}
+\newcommand{\stdsym}[0]{\symstate{F}{\regs}{I}}
+\newcommand{\natnum}[0]{\mathbb{N}}
+\newcommand{\lang}[0]{\mathcal{L}}
+\newcommand{\abp}[0]{\mathit{ABP}}
+\newcommand{\glb}[0]{\mathit{GLOB}}
+\newcommand{\nodelab}[0]{\mathit{NL}}
+\newcommand{\rootref}[0]{\mathit{RR}}
+\newcommand{\rootit}[0]{\mathit{ROOT}}
+\newcommand{\displ}[0]{\mathit{DISPL}}
+\newcommand{\femp}[0]{F_\mathit{Empty}}
+\newcommand{\fbad}[0]{F_\mathit{BAD}}
+
+\newcommand{\lstate}[0]{\mathit{lhs.state}}
+\newcommand{\rstate}[0]{\mathit{rhs.state}}
+
+\newcommand{\concrop}[1]{f_{\texttt{op}}(g_{#1})}
+
+\newcommand{\defarrow}[0]{\Leftrightarrow}
+
+\newcommand{\eqrel}[1]{\sim_#1}
+\newcommand{\eqclass}[2]{[#1]_{\eqrel{#2}}}
+\newcommand{\heqrel}[1]{\sim^n_#1}
+\newcommand{\langlen}[2]{L^{\leq n}(#1,#2)}
+\newcommand{\langstate}[2]{L(#1,#2)}
+\newcommand{\heqclass}[2]{[#1]_{\heqrel{#2}}}
+
+\newcommand{\abstr}[0]{\tau_{op}}
+\newcommand{\rabstr}[0]{\tau_{-op}}
+\newcommand{\abs}[0]{\alpha}
+\newcommand{\pabs}[0]{\alpha_{\predset}}
+
+\newcommand{\port}{\phi}
+\newcommand{\portind}[1]{\port_{#1}}
+\newcommand{\portof}[2]{\port_{#1}^{#2}}
+\newcommand{\portoff}[1]{\port^{#1}}
+\newcommand{\portseq}[2]{\port_{#1}^{#2} \cdots \port_{#1}^{#2}}
+
+\newcommand{\iport}{\pi}
+\newcommand{\iportof}[2]{\iport_{#1}^{#2}}
+\newcommand{\iportseq}[2]{\iport_{#1}^{#2} \cdots \iport_{#1}^{#2}}
+
+\newcommand{\fclass}[0]{\mathcal{F}}
+\newcommand{\fpabs}[0]{\alpha_{\predset}^{\fclass}}
+
+\newcommand{\pred}[0]{P}
+\newcommand{\predset}[0]{\mathcal{P}}
+\newcommand{\predaut}[0]{A^\mathcal{P}}
+\newcommand{\predauti}[1]{A^\mathcal{P}_{#1}}
+\newcommand{\peqrel}[0]{\sim_\predset}
+
+\newcommand{\lfunc}[2]{\lambda #1 \,:\, #2}
+\newcommand{\lfuncp}[3]{(\lambda #1 \,:\, #2)(#3)}
+
+\newcommand{\ddispl}[0]{Displ}
+\newcommand{\droot}[0]{Root}
+\newcommand{\rref}[0]{RR=(\droot,\ddispl)}
+\newcommand{\rreftuple}[2]{(#1,#2)}
+\newcommand{\rrefreg}[1]{#1=(\droot,\ddispl)}
+\newcommand{\ddata}[0]{D = (T,S,V,MB)}
+
+\newcommand{\grev}[0]{g}
+\newcommand{\grevinter}[0]{\symset \times \instrset \rightarrow \symset}
+
+\newcommand{\code}[1]{\small{\texttt{#1}}}
+\newcommand{\codix}[1]{\emph{\code{#1}}}
+
+\newcommand{\sbwd}[0]{S^{B}_{i}}
+\newcommand{\sbwdp}[1]{S^{B}_{#1}}
+\newcommand{\isfwd}[0]{I^{F}}
+\newcommand{\isfwdp}[1]{I_{#1}^{F}}
+\newcommand{\sfwd}[0]{S^{F}_{i}}
+\newcommand{\sfwdp}[1]{S^{F}_{#1}}
+\newcommand{\ftraceseq}[0]{S^{F}_0, \ldots, S^{F}_n}
+\newcommand{\ftrace}[0]{\mathit{FT}}
+
+\newcommand{\btraceseq}[1]{S^{B}_0, \ldots, S^{B}_#1}
+\newcommand{\btrace}[0]{\mathit{BT}}
+%\newcommand{\isbwd}[0]{I^{B}}
+\newcommand{\isbwd}[0]{I^{B}}
+\newcommand{\isbwdp}[1]{I^{B}_{#1}}
+\newcommand{\ipred}[0]{I_{P}}
+\newcommand{\ipredb}[0]{\isbwd_{P}}
+\newcommand{\bstdsym}[0]{\symstate{F}{\regs}{\isbwd}}
+
+\newcommand{\ffwd}[0]{F^{F}}
+\newcommand{\fbwd}[0]{F^{B}}
+
+
+%isect
+\newcommand{\A}[0]{\mathcal{A}}
+\newcommand{\B}[0]{\mathcal{B}}
+\newcommand{\CC}[0]{\mathcal{C}}
+\newcommand{\F}[0]{\mathcal{F}}
+\newcommand{\X}[0]{\mathcal{X}}
+\newcommand{\nat}[0]{\mathbb{N}}
+\newcommand{\st}[0]{\;|\;}
+\newcommand{\ltr}[1]{\xrightarrow{#1}} % labelled->
+\newcommand{\rank}[0]{\#}
+\newcommand{\post}[2]{\mathit{post}_{#1}(#2)}
+\newcommand{\powerset}[1]{2^{#1}}
