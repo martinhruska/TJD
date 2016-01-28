@@ -63,15 +63,15 @@
 \maketitle
 
 \begin{abstract}
-This work describes framework abstract interpretation instantiations
-with forest automata for purposes of shape analysis from perspective
-of program semantics.
-Before the analysis is covered itself, both abstract interpretation
-and forest automata are described at theoretical level.
-They are not only formally defined but also their crucial properties
-for the purposes of the analysis are shown.
-Finally, their connection is described together with brief introduction
-of the implemented shape analysis.
+This work focuses on abstract interpretation and
+forest automata and their application in shape analysis
+what is a field of static analysis focuses on verification of
+programs manipulating dynamic data structures.
+Abstract interpretation is described as an general method
+for defining semantics of programs first.
+Then forest automata are introduced together with their properties
+making them able to represent data structures allocated on heap.
+Finally, their application in shape analysis is presented. 
 \end{abstract}
 
 \tableofcontents
@@ -79,74 +79,93 @@ of the implemented shape analysis.
 \section{Introduction}
 \label{sec:intro}
 
-\emph{Abstract interpretation} based on forest automata is a technique of \emph{shape analysis}.
+\emph{Abstract interpretation based on forest automata} is a technique of \emph{shape analysis}.
 Shape analysis is a field of static analysis aiming to
-formal verification of memory safety properties (such as absence of
-segmentation fault, invalid frees or memory leaks) of
+formal verification of memory safety properties (safety properties
+guarantee that nothing bad never happens) of
 programs manipulating complex dynamic data structures.
-In shape analysis, data structures allocated on heap are viewed
-as graphs forming different shapes.
-Abstract interpretation based on forest automata can detect violation of the mentioned
-properties and provide an counterexample (a particular path in program
+The violations of the safety properties are often bugs
+such as segmentation fault, invalid frees or memory leaks.
+Abstract interpretation based on forest automata can detect these violations
+and provide an counterexample (a particular path in analysed program
 leading to a memory bug) or it can prove correctnes of program (w.r.t. given spacification)
 by generation of shape invariants representing all possible shapes which
 can be allocated on heap in a given point of analysed program.
+When we refer to shapes of heap then it means (in context of shape analysis)
+that the data structures allocated on heap are viewed
+as graphs forming different shapes.
 This works will firstly describe both parts, abstract interpretation and forest automata,
 of the technique separately and then their
 synthesis for the purposes of the analysis will be given.
 
-An application of abstract interpretation is not only in shape analysis.
-In fact, abstract intepreation is a general framework for automatical
-definition or (sound) approximation of program semantics (w.r.t. observed properties) from its source code.
-This is done by defining an \emph{abstract domain} representing observed properties
-and modelling efects of program statements in this domain.
-E.g., consider integer variables and their possible values as a concrete domain in program,
-then the abstract domain can be set of intervals $(-\infty, -100>, (-100, 100), <100, \infty)$.
-In this case, a concrete value $3$ of a variable will be represented by interval $(-100,100)$
-in abstract domain.
+Abstract interpretation is not only a method of formal verification but
+it is a general framework for automatical definition or (sound) approximation of
+program semantics (w.r.t. observed properties) from its source code.
+The crucial component of abstract interpretation is so called
+\emph{abstract domain} representing observed properties of program.
+It is also necessary to model the effects of program statements
+on observed properties in abstract domain.
+E.g., consider an analysis of possible values of integer variables.
+The concrete domain is formed by the set of integers (a set represent possible
+values of a variable) and the abstract domain can be set of intervals over integers.
+In such case, a concrete value $\{2,10,100\}$ of a variable could
+be represented by interval $\interval{-100}{100}$ in the abstract domain.
+It is of course possible to pick a more precise interval such as $\interval{2}{100}$.
+A~choice of interval depends on an abstraction function
+which maps values from concrete domain to abstract one.
+The abstract function is often compromise between precision and computational
+feasability (i.e., avoiding a state space explosion during analysis).
 
-The choice of abstract domain is not completly unrestricted.
+A~choice of abstract domain is not completly unrestricted.
 The framwork of abstract interpretation requires to chose a domain
-which will overaproximate all possible behaviours of the original program,
-i.e. each possible behaviour of the analysed program is included possible
-behaviours program in abstract domain.
-Such overaproximation is \emph{sound} because it will not miss no
-behaviour of original program.
-On the other hand, a weakness of this approaoch is in the fact that it can
-be \emph{incomplete}\,---\,it adds behaviour of program which are not in the original
-semantics but are cause by overaproximation.
-One can also ask why we do the overaproximation when it gives imprecise information about
-program semantics.
-The reasons are twos.
+overaproximating all possible behaviours of the original program.
+This means that each possible behaviour of the analysed program is included in
+behaviours of the program in abstract domain.
+Such overaproximation is \emph{sound} because it will not miss any
+behaviour of the original program.
+On the other hand, a weakness of this approaoch is \emph{incompletness}\,---\,
+adding the behaviours of program not presented in the original semantics
+
+One can ask for the reasons of the overaproximation when it leads to
+imprecise information about program semantics.
+The reasons are two.
 The first and the main one is that the abstraction (representation in abstract domain) gives
-the analysis chance to terminate beucase the problem of defining semantics of a program is
+analysis chance to terminate since the problem of defining semantics of a program is
 generally undecidable (by reduction from halting problem).
-The second reason is acceleration of computation of semantics because analysis over concrete
-domain of program can lead to state explosion problem and so to exponential complexity.
+The second reason is an acceleration of computation of semantics by reduction of state
+space needed to explore in abstract domain in contrast to an analysis in concrete domain
+which often lead to the space explosion problem and so to an exponential complexity.
 
 The information collected by abstract interpretation can be used not only
-in verification but also in automatic code optimization or as a support for debugging
-(e.g. abstract interpretation can provide data flow graph).
+in verification but also in automatic code optimization done by compilers
+or as a support for debugging (e.g. abstract interpretation can provide data flow graph).
 
-The other essential part of this work is forest automata theory.
+The other essential part of this work is forest automata (FA) theory.
 Forest automata were introduced in \cite{cav11}.
-They are basically tuples of tree automata (automata similiar to finite automata
+They are basically tuples of tree automata (TA) (automata similiar to finite automata
 but they accepts trees instead of words) which are interconnected
-by references in symbols.
+by references to another TA of FA in symbols from alphabet of forest automaton.
 Forest automata have been designed directly for shape analysis and
 they came from principles of \emph{abstract regular model checking} \cite{artmc}.
 However in \cite{atva13}, they were presented as an abstract domain in abstract interpretation.
-Informally, one class of heap shapes are graphs that can be decomposed to the tuples
-of trees (this trees are then interconnected by the mentioned references).
-These tuples of trees can be accepted by forest automata as members of their languages.
+Informally, forest automata can model a certain class of data structure.
+These data structures can be viewed as graphs (or shapes) that can be decomposed to the tuples
+of trees (this trees are interconnected by the mentioned references).
+These tuples of trees can be accepted by forest automata as the members of their languages.
 Therefore forest automata can represent (by their languages) the possible shapes of heaps
-and so they can be used as abstract domain.
-There are also designed abstraction techniques over forest automata which
-overaproximate represented state space and makes possible for analysis to terminate.
+and so they can be used as an abstract domain.
+The abstraction techniques over forest automata were also designed
+to overaproximate represented state space and makes possible for analysis to terminate.
 
-Forest automata based shape analysis are able to analysis complex
-dynamic data structures such as skiplist of the second and the third
-level which are no analysable by any other technique.
+Forest automata based abstract interpretation is done by (i) using
+forest automata as an abstract domain, (ii) definition of the appropriate
+operations over forest automata modelling statements in program
+modifying dynamic data structures and (iii) using abstraction over FA
+to enable computing all possible shapes of heap in particular
+program points.
+The method has ability to analyse complex dynamic data structures
+such as skiplist of the second and the third level which are not
+automatically analysable by any other technique.
 
 The rest of this work is structured as follows.
 In Section \ref{sec:aif}, abstract interpretation will
@@ -157,45 +176,48 @@ described in Section \ref{sec:analysis}.
 
 \section{Abstract Interpretation Framework}
 \label{sec:aif}
-Although we gave some intuition on priciples of abstract interpretation in introduction,
-we recall the used example and deepen understanding of the concept at non-technicall level.
-Then the formal definition of abstract interpretation will be given, construction of its parts
+We already gave some intuition about priciples of abstract interpretation in the introduction,
+this sections provides with more formal and deep description of method.
+First, the mentioned example about tracking integer variables is completed by
+other ingrediences of abstract interpretation to deepen the intuition.
+Then the formal definition of abstract interpretation is given, construction of its parts
 explained and its properties described.
-Finally the methods for computing semantics (or its overaproximation) of program will be given.
+Finally an algorithm for computing semantics (or its overaproximation) of program
+using abstract interpretation is presented.
 
-Consider again the case of the abstract interpretation for tracking the values
-of integer variables.
-The concrete domain is set of integers $\mathbb{Z}$ (for simplification
-we will not consider overlows of integer variables etc.).
-The statements of programming language which can change value of the variables
+Consider again the example of the abstract interpretation for tracking
+the possible values of integer variables.
+The concrete domain is a set of sets of integers $2^\mathbb{Z}$ (for simplification
+we will not consider overflows of integer variables etc.).
+The statements of programming language changing values of the variables
 (e.g., assigment or incrementation) are called \emph{concrete transformers}.
-The concrete analysis directly over the concrete domain with the conrete transformers
-would led to non-termination of analysis.
-This is resolved by defining abstract domain using intervals of integer values.
-In out case, the abstract domain is a set with three items $\{(-\infty,-100\rangle, (-100, 100), \langle 100,\infty)\}$.
-But more precise information you get the slower the analysis will (probably) be.
+A~concrete analysis over the concrete domain with the conrete transformers
+would led to non-termination of analysis because infinite space may arise.
+The non-termination problem can be addressed by doing the analysis in abstract domain.
+The abstract domain is a set of intervals over $\mathbb{Z}$.
 
 To model the semantics of program in abstract domain, it is necessary to define
-abstract transformers related to the concrete semantics.
+abstract transformers modelling the concrete semantics.
 The abstract transformers should reflect an effect of a concrete transformer
 on the properties tracked by abstract interpretation.
-E.g., consider the variables $x$ and $y$ with values $(-\infty,-100\rangle$
+In our example, consider the variables $x$ and $y$ assigned values $(-\infty,-100\rangle$
 and $(-100, 100)$ in abstract domain.
 The abstract transformer corresponding to arithmetic addition $+$
-shoudl have for $x+y$ lead to the result $(-\infty,200)$.
+should for $x+y$ give the result $(-\infty,100)$.
 
-Moreover, we will need to define operator joining values
-of a variable from more paths.
-Example of a program point, where such an operator is needed, is
-end of \texttt{if} statement.
-In the the mentioned example, the join of a variable $x$
-with abstract value $\interval{100}{200}$ in \texttt{then} branch
+Moreover, we will need to define operator joining possible values
+of a variable over more paths in program.
+The examples of program points, where such an operator is needed, is
+the end of \texttt{if} statement or the beginning of \texttt{while} loop.
+E.g., the join of a variable $x$
+with the abstract value $\interval{100}{200}$ in \texttt{then} branch
 of if statement and $\interval{400}{500}$ in \texttt{else} branch
-can result to value $\interval{100}{500}$ taking the smaller beginning
-and greater end of the both intervals as the boundaries of the interval.
+would result to the abstract value $\interval{100}{500}$ taking the smaller beginning
+and greater end of the both intervals as the boundaries of the new interval.
 
-The key property of join operator is that its result is greater or
-equal to the inputs.
+The join operator should result to the greater or
+equal abstract value compared to the inputs of the operator.
+This is key property of join operator.
 An ordering $\aord$ over the values in abstract domain is therefore needed
 to enable checking of this property of join operator.
 
@@ -209,10 +231,11 @@ $I=(\adom, \ajoin, \aord, \asup, \ainf, \atrans)$ where
 \begin{itemize}
 	\item $\adom$ is an abstract domain
 	\item $\ajoin: \adom \times \adom \rightarrow \adom$ is a join operator
-	\item $\aord \subseteq \adom \times \adom$ is a relation operator such that $\forall x,y \in \adom: x \aord y \leftrightarrow x \ajoin y = y$
+	\item $\aord \subseteq \adom \times \adom$ is a relation (ordering) such that $\forall x,y \in \adom: x \aord y \leftrightarrow x \ajoin y = y$
 	\item $\asup$ is a supremum of $\adom$
 	\item $\ainf$ is a infinum of $\adom$
-	\item $\atrans = \{\bigtimes_{n\geq 0}(\adom) \rightarrow \adom\}$ is a set of abstract transformers, where $n$ defines arity of abstract transformer
+	\item $\atrans = \{\adom \times \ldots \times \adom \rightarrow \adom\}$ is a set of abstract transformers, where a length of
+		the sequence $\adom \times \ldots \times \adom$ determines arity of abstract transformer
 \end{itemize}
 
 
