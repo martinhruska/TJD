@@ -241,86 +241,86 @@ $I=(\adom, \ajoin, \aord, \asup, \ainf, \atrans)$ where
 
 $(\adom, \ajoin, \aord, \top, \perp)$ forms a complete semilattice.
 
-Abstract transformers can be defined by formalization of behaviour of concrete instructions
+Abstract transformers can be specified by formalization of behaviour of concrete instructions
 of program using e.g., denotational or operational semantics w.r.t. properties tracked
 by abstract interpretation.
-From this point of view, abstract interpretation is a method for defining semantics
-of a program written in a programming language with defined semantics.
+Therefore when a programming language has a well-defined semantics then
+it is possible to use abstract interpretation as a method for computation
+of a program written in this programming language.
 
-Now we will describe the most important characteristics of the defined abstract interpretation.
-Since abstract interpretation overaproximate possible behaviours of
-the concrete system, it is sound \textbf{sound} method.
-We need to define two functions $\afun, \cfun$ for switching between abstract
-and concrete domain to be able to show this.
+The most important characteristics of abstract interpretation
+are going to be described in the following section.
+Since abstract interpretation overaproximates possible behaviours of
+the concrete system it is a \textbf{sound} method.
+A~prove of soudness will be informally described using
+two auxiliary functions $\afun, \cfun$ for switching between abstract and concrete domain.
 An abstraction function $\afun: \cdom \rightarrow \adom$ assigns to an item from
-concrete domain an item form abstract domain and an concretization function
+concrete domain an item form abstract domain and a concretization function
 $\cfun: \adom \rightarrow \cdom$ maps values from abstract domain back to concrete domain.
-Assume also that there exists an ordering $\cord \subseteq \cdom \times \cdom$.
-Moreover, $(\adom, \aord, \afun)$ and $(\cdom, \cord, \cfun)$ forms
-a Gallois connections which is defined as follows:
+Assume also an ordering $\cord \subseteq \cdom \times \cdom$.
+Triples $(\adom, \aord, \afun)$ and $(\cdom, \cord, \cfun)$ form
+\emph{Gallois connections} \cite{popl77} which is defined as follows:
 \begin{center}
-	$(\adom, \aord, \afun, \cfun, \cdom, \cord)$ is Gallois connections iff
+	$(\adom, \aord, \afun, \cfun, \cord, \cdom)$ is Gallois connections iff
 	$(\adom, \aord)$ and $(\cdom, \cord)$ are posets and
 	$\forall \citem \in \cdom \, \forall \aitem \in \adom: \citem \cord \cfun(\aitem)
-	\leftrightarrow \aitem \aord \afun(\citem)$
+	\Leftrightarrow \aitem \aord \afun(\citem)$
 \end{center}
 
-From the properties of Gallois connections comes
-$\forall \citem \in \cdom: \citem \in \cfun(\afun(\citem))$
-because for $q = \afun(\citem)$ it holds that $\aitem = \afun(\citem) \Rightarrow
-\alpha(\citem) \aord \aitem$, thus $\citem \cord \cfun(\aitem)$ and finally
-$\citem \cord \cfun(\afun(\citem))$.
-We get that concretization of an abstracted configuration of concrete system
+The properties of Gallois connections implies that
+$\forall \citem \in \cdom: \citem \cord \cfun(\afun(\citem))$.
+Let $q = \afun(\citem)$ then it holds $\alpha(\citem) \aord \aitem$,
+thus $\citem \cord \cfun(\aitem)$ and finally $\citem \cord \cfun(\afun(\citem))$.
+We get that a concretization of an abstracted configuration of concrete system
 is greater than the original value and covers the original configuration.
-It is also necessary for abstract transformers not to violate Gallois connection,
-which means that holds $\alpha(I(\citem_1,\ldots,\citem_n)) \cord \atrans_I(\alpha(\citem_1),\ldots, \alpha(\citem_n))$
+Another necessary property of abstract interpretation leading to soudness is
+that abstract transformers do not violate Gallois connection.
+Formally, $\alpha(I(\citem_1,\ldots,\citem_n)) \cord \atrans_I(\alpha(\citem_1),\ldots, \alpha(\citem_n))$
 where $\citem_1,\ldots,\citem_n \in \cdom$ and $\atrans_I$ is an abstract transformer
-modelling semantics of instruction $I$ in concrete program.
+modelling semantics of an instruction $I$ in concrete program.
+These two properties of abstract domain and abstract transfomers ensures
+soundness of abstract interpretation.
 
+On the other hand, abstract interpretation is not \textbf{complete}.
+The fact $\citem \cord \cfun(\afun(\citem))$ (a concretization of abstracted value
+is something greater) implies that an abstraction of concrete value may lead
+to overaproximation of possible behaviours.
+This is undesirable in the applications such as formal verification
+where the behaviours added by overaproximation can contain
+a violation of the checked properties.
 
-As one can see this definition of abstract interpretation
-does not ensure \textbf{completness} of the method.
-The fact that $\citem \cord \cfun(\afun(\citem))$ shows
-that abstraction of a concrete value can led to overaproximating of
-possible behaviours because after concretization of the abstracted
-value we get something greater.
-This is undesirable for example for application in formal verification
-where the behaviours caused by overaproximation can contain a violation
-of the checked properties.
-
-The possible way out of incompletness problem is a refinement of the abstraction.
-However, too strong refinement can led to infeasable computation complexity
+A~possible solution of problems caused by incompletness is a refinement of the abstraction.
+However, an immoderate refinement can led to infeasable computational complexity
 or even to nontermination of the method.
 Generally, \textbf{termination} of abstract interpretation is guaranteed
-when abstract domain $\adom$ satisfies Kleene's sequence is finite \cite{popl77}.
-This is achieved when abstract domain is finite, or the length of any strictly
+when abstract domain $\adom$ satisfies that Kleene's sequence is finite \cite{popl77}.
+This is achieved when abstract domain is finite, a length of any strictly
 increasing chain is finite, or abstract domain satisfies the ascending chain
-condition (every strictly increasing chain is finite, although not bounded),
+condition (every strictly increasing chain is finite, although not bounded).
 Then the termination comes from Kleene's fixpoint theorem.
 When abstract domain contains infinite Kleene's sequence then
 then the abstract transformers can be chosen to allow only finite
 Kleene's sequences during abstraction.
 When the abstract domain has infinite Kleene's sequences and
-the abstract transformers do not exclude the from abstract
-interpretation then the sequence can be truncated or computation
+the abstract transformers do not exclude them from computation during abstract
+interpretation then the sequences should be truncated or computation
 of fixpoint approximated by some heuristic.
-Finally, when the finite Kleene's sequence condition is
-satisfied then the termination of the method is guaranteed
-by Kleene's fixpoint theorem.
+Finally, when only the finite Kleene's sequences occur then
+the termination of the method is guaranteed by Kleene's fixpoint theorem.
 
 The abstraction brings inherently certain trade-off between
-precision of the analysis and efficiency of the method.
+precision and efficiency of the method.
 When the abstraction is very precise then the analysis
-will be slower because larger state space has to be explored.
+is slower because larger state space has to be explored.
 
-The ideas of acceleration (and termination guarantee) of the computation of semantics
-of programs are in abstract interpretation reflected by
-the methods for approximation of fixpoint of possible
-behaviour in a program point.
-The approximation is necessary in the loop points of
-progam because the infinite looping can lead to nontermination
-of the analysis.
-A~concept of \emph{widening} is introduced for this purposes.
+In abstract interpretation, the mentioned approximation of fixpoint is
+used in computation of all possible behaviours of for a givem program point.
+The approximation is primarly necessary in the loop points of
+progam where a new possible behaviour of a program can be generated
+in each loop cycle.
+This could lead to unbounded sequence of possible behaviours and
+nontermination of the analysis.
+A~concept of \emph{widening} is introduced to resolve such cases.
 The~binary operation $\wid: \adom \times \adom \rightarrow \adom$ is widening iff:
 \begin{itemize}
 	\item $\forall \aitem, \aitem' \in \adom: \aitem \ajoin \aitem' \aord \aitem \wid \aitem'$
@@ -329,14 +329,14 @@ The~binary operation $\wid: \adom \times \adom \rightarrow \adom$ is widening if
 		is not strictly increasing.
 \end{itemize}
 
-Informally, using widening instead of join is one of possible heuristic
-that will approximate fixpoint infinite Kleene's sequence.
+Informally, using widening $\wid$ instead of join $\ajoin$ is one of possible heuristic
+which will approximate fixpoint infinite Kleene's sequence.
 It also accelerates the fixpoint computation compared with join because
-$\aitem, \aitem' \in \adom: \aitem \ajoin \aitem' \aord \aitem \wid \aitem'$.
+$\forall \aitem, \aitem' \in \adom: \aitem \ajoin \aitem' \aord \aitem \wid \aitem'$.
 
 The opposite operation to widening is \emph{narrowing}.
 While widening accelerates computation narrowing
-refines the overaproximation to get more precise information.
+refines the overaproximation to get a more precise information.
 Formally, the binary operation $\nar: \adom \times \adom \rightarrow \adom$
 is widening iff:
 \begin{itemize}
@@ -347,7 +347,7 @@ is widening iff:
 \end{itemize}
 
 Although the widening refines the abstraction it does not
-break conditions ensuring fixpoint computation or approximation
+break conditions guaranteeing fixpoint computation or approximation
 what comes from the second point of widening definition.
 
 We defined abstact interpretation and its basic properties
@@ -355,58 +355,62 @@ but we have not mentioned how to use it for computing
 semantics of program.
 Consider a program $P$ with program points denoted $P_i$
 where $i$ is an index of a program location.
-For each program point $i$ we set the possible values of the tracked
-semantics properties to $\ainf$.
+We set the initial values of the tracked semantics properties
+to $\ainf$ for each program point $i$.
 Then the corresponding abstract transformers in the given program point
 are applied repetatively until a fixpoint in each location is reached.
-The changes in tracked values in one program locations are propagated in each iteration to the
-following locations.
-At the program points with join of more paths such as loop points or ends of conditions
-is applied join, widening or narrowing.
+The changes in tracked values in one program locations are propagated to each
+iteration to the subsequent locations.
+Join, widening (and if needed also narrowing) is applied at the program points
+where more paths such as loop points or ends of conditions meet.
 The abstract transformers are applied using round robin algorithm where
-the order of transformers are defined by the original program locations.
+the order of transformers is defined by the original program locations.
 
 Another possible point of view to the computation of semantics of a program using
 abstract interpretation is a system of equitation.
 Each program location with its dedicated abstract transformer can be viewed
 as one equtiation.
-The different equitations share the same variables what leads to propagation
+The different equitations share variables what leads to propagation
 of values between equitation.
-The existence of solution of this system of equitations is guaranteed by
-existence of fixpoint for abstract interpretation.
+An existence of (aproximate) solution of this system of equitations
+is guaranteed by existence fixpoint for computation by abstract interpretation.
 
 While the firest mentioned approach to computing the semantics of a program is
 closer to implementation perspective, the second one is often used in papers
-developing theoretical aspects of abstract interpretation and related theory.
+focusing on theoretical aspects of abstract interpretation and
+the related mathematical background.
+\newpage
 
 \bexmp
-Now the example with tracking integer values will be completed in terms of the defined framework.
+The example about tracking integer values will be completed
+in notion of the defined framework.
 The example is taken from \cite{popl77}.
 We want to instantiate abstract interpretation framework for aproximating
 possible values of integer variables in given program location.
-Conrete domain will be $2^\mathbb{\intg}$ and each variable can
-have a value from a set from $2^\mathbb{\intg}$ which is assigned to each variable
-at a program point.
-The abstract interpretation will be $(\iintg, \ijoin, \interval{-\infty}{\infty}, \interval{}{}, \atrans)$ where 
+Conrete domain is $2^\mathbb{\intg}$, so each variable
+has a value from a set from $2^\mathbb{\intg}$ which it can
+gain in given program location.
+
+The abstract interpretation is $(\iintg, \ijoin, \interval{-\infty}{\infty}, \interval{}{}, \atrans)$ where 
 \begin{itemize}
-	\item $\iintg = \{\interval{x}{y} \,|\, x,y \in \intg\}$
+	\item $\iintg = \{\interval{x}{y} \,|\, x,y \in \intg \wedge x \leq y\}$
 	\item $\interval{x}{x'}, \interval{y}{y'} \in \iintg: \interval{x}{x'} \ijoin \interval{y}{y'}
 		= \interval{min(x,y)}{max(x',y')}$. Informally, $\ijoin$ is a union of two intervals
 	\item $\interval{}{}$ is an empty interval
 	\item $\atrans$ will be defined on demand for instructions used in the following example program
 \end{itemize}
 
-Consider the following program in $C$ language, where $C$ in comment is labeling
-a particular program point.
+Consider the following program in the $C$ language, where $C_i$ in a comment is labeling
+of a particular program point $i$.
 
 \lstinputlisting[caption=Example program, style=customc]{example.c}
 
-The only integer variable in program is $x$ so as the next step,
-the system of equitations for the program will be created to compute possible
-abstract values of $x$ in each program point.
-But first we have to define the next two operators:
+The only integer variable in program is $x$. As the next step,
+the system of equitations for the program will be assembled
+to compute the possible abstract values of $x$ in each program point.
+But first we have to define the following two operators:
 \begin{itemize}
-	\item $+: \interval{x}{x'} + \interval{y}{y'} = \interval{x+y}{x+x'}$
+	\item $+: \interval{x}{x'} + \interval{y}{y'} = \interval{x+y}{x'+y'}$
 	\item $\cap: \interval{x}{x'} \cap \interval{y}{y'} = \interval{max(x,y)}{min(x,y)}$
 \end{itemize}
 
@@ -427,13 +431,13 @@ If we start computation of fixpoint using just $\ijoin$ operator the computation
 before the fixpoint is reached.
 That is maximal number of iteration of the \texttt{while} cycle.
 The possitive message is that the computation will terminate, the negative one
-is that it will take quite a long time for such as simple program.
+is that it will take quite a long time for such a simple program.
 Therefore we introduce widening $\wid$ defined as follows:
 \begin{itemize}
 	\item $\interval{}{}$ is the null element of $\wid$
 	\item $\interval{x}{x'} \wid \interval{y}{y'} = \interval{(x < y)\,?\,-\infty\,:\,x}{(y' > x')\,?\,\infty\,:\,x'}$
 \end{itemize}
-where $?:$ is a ternary operator with the same semantics as in $C$ language.
+where $?:$ is a ternary operator with the same semantics as in the $C$ language.
 
 The equitation $3$ will be modified using the widening:
 $C_2 = C_2 \wid (C_1 \ijoin C_4)$.
@@ -456,7 +460,7 @@ The approximation of solution is computed in the following iterations:
 	
 	\item \hspace{-0.5em} iteration:
 		\begin{itemize}
-			\item $C_2 = \interval{1}{1} \wid (\interval{1}{1} \ijoin \interval{2}{2}) =
+			\item $C_2 = \interval{1}{1} \wid (\interval{1}{1} \ijoin \interval{2}{2})
 		               = \interval{1}{1} \wid \interval{1}{2} = \interval{1}{\infty}$
 			\item $C_3 = \interval{1}{100}$
 			\item $C_4 = \interval{2}{101}$
@@ -464,22 +468,22 @@ The approximation of solution is computed in the following iterations:
 		\end{itemize}
 \end{enumerate}
 
-Other iteration would not change anything so the fixpoint is reached.
+Another iteration would not change anything so the fixpoint is reached.
 The widening operator definitely accelerated the computation and
-saved $78$ iterations.
+saved $98$ iterations.
 On the other hand, the information about values at points in $C_2$ and $C_5$
 is very rough due to abstraction.
 
-The loss of information can be reduce by narrowing operator $\nar$ with
+The loss of information can be reduced by narrowing operator $\nar$ with
 this definition:
 \begin{itemize}
 	\item $\interval{}{}$ is the null element of $\nar$
 	\item $\interval{x}{x'} \nar \interval{y}{y'} =
-		\interval{(x = -\infty) ? y : min(x,y)}{(x' = \infty) ? y' : max(x',y')}$
+		\interval{(x == -\infty)\,?\,y : min(x,y)}{(x' == \infty)\,?\,y' : max(x',y')}$
 \end{itemize}
 
 We update $2.$ equtation using narrowing:
-$C_2 = C2 \nar (C_1 \ijoin C_4)$.
+$C_2 = C_2 \nar (C_1 \ijoin C_4)$.
 The computed solution of equitations will be refined in the following iterations:
 \begin{enumerate}
 	\setcounter{enumi}{2}
@@ -493,20 +497,22 @@ The computed solution of equitations will be refined in the following iterations
 		\end{itemize}
 \end{enumerate}
 
-After the narrowing the information is much more precise and only other iteration
-was needed so $77$ iterations were saved compared to the computation without widening
-(causing loss of information due to abstraction) and narrowing.
+After the narrowing the information is much more precise and only one iteration
+was needed so $97$ iterations were saved compared to the computation without
+widening and narrowing.
 
 Another advantage of analysis of the program in abstract domain is a compact
 representation using intervals instead of set of integer values in concrete domain.
 Moreover, the used abstraction (narrowing operator) would not be possible in
-concrete domain because we are not able to work with infinite set.
-
+concrete domain because we are not able to work with an infinite set.
 \eexmp
 
-As we mentioned the framework of abstract interpretation is general and many static analysis
-can be formulate as an abstract interpretation instantiation, e.g., data flow analysis,
-pointer analysis, or correct array access.
+
+As we mentioned, the framework of abstract interpretation is general and
+the preceding example is just a special case.
+Many other static analysis can be formulated as
+an abstract interpretation, e.g., data flow analysis,
+pointer analysis, or correct array access analysis.
 
 \section{Forest Automata}
 \label{sec:fa}
