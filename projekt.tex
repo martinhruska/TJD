@@ -63,15 +63,16 @@
 \maketitle
 
 \begin{abstract}
-This work focuses on abstract interpretation and
-forest automata and their application in shape analysis
-what is a field of static analysis focuses on verification of
+Shape analysis is a field of static analysis focuses on verification of
 programs manipulating dynamic data structures.
-Abstract interpretation is described as an general method
+An approach to shape analysis described in this work
+is based on combination of abstract interpretation and forest automata.
+Abstract interpretation is described as a general method
 for defining semantics of programs first.
-Then forest automata are introduced together with their properties
-making them able to represent data structures allocated on heap.
-Finally, their application in shape analysis is presented. 
+Then forest automata are defined and their ability
+to model dynamic data structure is presented.
+Finally, an application of abstract interpretation based on
+forest automata in shape analysis is covered. 
 \end{abstract}
 
 \tableofcontents
@@ -82,31 +83,32 @@ Finally, their application in shape analysis is presented.
 \emph{Abstract interpretation based on forest automata} is a technique of \emph{shape analysis}.
 Shape analysis is a field of static analysis aiming to
 formal verification of memory safety properties (safety properties
-guarantee that nothing bad never happens) of
+guarantee that something bad never happens) of
 programs manipulating complex dynamic data structures.
 The violations of the safety properties are often bugs
 such as segmentation fault, invalid frees or memory leaks.
 Abstract interpretation based on forest automata can detect these violations
-and provide an counterexample (a particular path in analysed program
+and provide a counterexample (a particular path in analysed program
 leading to a memory bug) or it can prove correctness of program (w.r.t. given specification)
 by generation of shape invariants representing all possible shapes which
 can be allocated on heap in a given point of analysed program.
 When we refer to shapes of heap then it means (in context of shape analysis)
 that the data structures allocated on heap are viewed
 as graphs forming different shapes.
-This works will firstly describe both parts, abstract interpretation and forest automata,
-of the technique separately and then their
-synthesis for the purposes of the analysis will be given.
+
+This work describes both components, abstract interpretation
+and forest automata, separately and then their
+synthesis for the purposes of shape analysis is presented.
 
 Abstract interpretation is not only a method of formal verification but
 it is a general framework for automatic definition or (sound) approximation of
-program semantics (w.r.t. observed properties) from its source code.
-The crucial component of abstract interpretation is so called
-\emph{abstract domain} representing observed properties of program.
-It is also necessary to model the effects of program statements
-on observed properties in abstract domain.
+program semantics (w.r.t. tracked properties) from its source code.
+Abstract interpretation does not track the properties of interest
+in program under its original semantics (in so called \emph{concrete domain}).
+It represents them in \emph{abstract domain}.
+This abstract representation is more conscise but lose information.
 E.g., consider an analysis of possible values of integer variables.
-The concrete domain is formed by the set of integers (a set represent possible
+The concrete domain is formed by the set of sets of integers (a set represent possible
 values of a variable) and the abstract domain can be set of intervals over integers.
 In such case, a concrete value $\{2,10,100\}$ of a variable could
 be represented by interval $\interval{-100}{100}$ in the abstract domain.
@@ -115,10 +117,14 @@ A~choice of interval depends on an abstraction function
 which maps values from concrete domain to abstract one.
 The abstract function is often compromise between precision and computational
 feasibility (i.e., avoiding a state space explosion during analysis).
+We also need to define the effects of program statements
+on observed properties in abstract domain.
+Apart from abstract domain, we also need to define the effects
+of program statements on observed properties in abstract domain.
 
-A~choice of abstract domain is not completely unrestricted.
-The framework of abstract interpretation requires to chose a domain
-overapproximation all possible behaviors of the original program.
+A~choice of abstract domain and abstraction function is not completely unrestricted.
+The framework of abstract interpretation requires to chose them to
+overapproximate all possible behaviors of the original program.
 This means that each possible behavior of the analysed program is included in
 behaviors of the program in abstract domain.
 Such overapproximation is \emph{sound} because it will not miss any
@@ -129,12 +135,13 @@ adding the behaviors of program not presented in the original semantics
 One can ask for the reasons of the overapproximation when it leads to
 imprecise information about program semantics.
 The reasons are two.
-The first and the main one is that the abstraction (representation in abstract domain) gives
+The first and the main one is that an abstraction (representation in abstract domain) gives
 analysis chance to terminate since the problem of defining semantics of a program is
 generally undecidable (by reduction from halting problem).
-The second reason is an acceleration of computation of semantics by reduction of state
-space needed to explore in abstract domain in contrast to an analysis in concrete domain
-which often lead to the space explosion problem and so to an exponential complexity.
+The second reason is an acceleration of computation of semantics
+by reduction of explored state space in abstract domain.
+That is in contrast to an analysis in concrete domain
+which often lead to space explosion problem and so to an exponential complexity.
 
 The information collected by abstract interpretation can be used not only
 in verification but also in automatic code optimization done by compilers
@@ -143,12 +150,12 @@ or as a support for debugging (e.g. abstract interpretation can provide data flo
 The other essential part of this work is forest automata (FA) theory.
 Forest automata were introduced in \cite{cav11}.
 They are basically tuples of tree automata (TA) (automata similar to finite automata
-but they accepts trees instead of words) which are interconnected
+but they accept trees instead of words) which are interconnected
 by references to another TA of FA in symbols from alphabet of forest automaton.
 Forest automata have been designed directly for shape analysis and
 they came from principles of \emph{abstract regular model checking} \cite{artmc}.
-However in \cite{atva13}, they were presented as an abstract domain in abstract interpretation.
-Informally, forest automata can model a certain class of data structure.
+However in \cite{atva13}, they were presented as an abstract domain in abstract interpretation
+because forest automata can model a certain class of data structure.
 These data structures can be viewed as graphs (or shapes) that can be decomposed to the tuples
 of trees (this trees are interconnected by the mentioned references).
 These tuples of trees can be accepted by forest automata as the members of their languages.
@@ -163,7 +170,7 @@ operations over forest automata modeling statements in program
 modifying dynamic data structures and (iii) using abstraction over FA
 to enable computing all possible shapes of heap in particular
 program points.
-The method has ability to analyse complex dynamic data structures
+The method is able to analyse complex dynamic data structures
 such as skip-list of the second and the third level which are not
 automatically analysable by any other technique.
 
@@ -176,13 +183,13 @@ described in Section \ref{sec:analysis}.
 
 \section{Abstract Interpretation Framework}
 \label{sec:aif}
-We already gave some intuition about principles of abstract interpretation in the introduction,
-this sections provides with more formal and deep description of method.
+We already gave some intuition about principles of abstract interpretation in the introduction.
+This sections provides with more formal and deep description of method.
 First, the mentioned example about tracking integer variables is completed by
 other ingredients of abstract interpretation to deepen the intuition.
 Then the formal definition of abstract interpretation is given, construction of its parts
 explained and its properties described.
-Finally an algorithm for computing semantics (or its overapproximation) of program
+Finally, a method for computing semantics (or its overapproximation) of program
 using abstract interpretation is presented.
 
 Consider again the example of the abstract interpretation for tracking
@@ -193,8 +200,8 @@ The statements of programming language changing values of the variables
 (e.g., assignment or increment) are called \emph{concrete transformers}.
 A~concrete analysis over the concrete domain with the concrete transformers
 would led to non-termination of analysis because infinite space may arise.
-The non-termination problem can be addressed by doing the analysis in abstract domain.
-The abstract domain is a set of intervals over $\mathbb{Z}$.
+The non-termination problem can be addressed by doing the analysis in abstract domain,
+which is a set of intervals over $\mathbb{Z}$.
 
 To model the semantics of program in abstract domain, it is necessary to define
 abstract transformers modeling the concrete semantics.
@@ -216,10 +223,10 @@ would result to the abstract value $\interval{100}{500}$ taking the smaller begi
 and greater end of the both intervals as the boundaries of the new interval.
 
 The join operator should result to the greater or
-equal abstract value compared to the inputs of the operator.
+equal abstract value compared to its inputs.
 This is key property of join operator.
-An ordering $\aord$ over the values in abstract domain is therefore needed
-to enable checking of this property of join operator.
+An ordering $\aord$ over abstract domain is therefore needed
+for checking of this property of join operator.
 
 Now we will continue from the intuitive description to
 the formal definition of abstract interpretation (definitions
@@ -246,7 +253,7 @@ of program using e.g., denotational or operational semantics w.r.t. properties t
 by abstract interpretation.
 Therefore when a programming language has a well-defined semantics then
 it is possible to use abstract interpretation as a method for computation
-of a program written in this programming language.
+of a precise program semantics written in this programming language.
 
 The most important characteristics of abstract interpretation
 are going to be described in the following section.
@@ -254,8 +261,8 @@ Since abstract interpretation overapproximates possible behaviors of
 the concrete system it is a \textbf{sound} method.
 A~prove of soundness will be informally described using
 two auxiliary functions $\afun, \cfun$ for switching between abstract and concrete domain.
-An abstraction function $\afun: \cdom \rightarrow \adom$ assigns to an item from
-concrete domain an item form abstract domain and a concretization function
+An abstraction function $\afun:~\cdom \rightarrow \adom$ assigns to an item from
+concrete domain an item from abstract domain and a concretization function
 $\cfun: \adom \rightarrow \cdom$ maps values from abstract domain back to concrete domain.
 Assume also an ordering $\cord \subseteq \cdom \times \cdom$.
 Triples $(\adom, \aord, \afun)$ and $(\cdom, \cord, \cfun)$ form
@@ -271,13 +278,13 @@ The properties of Gallois connections implies that
 $\forall \citem \in \cdom: \citem \cord \cfun(\afun(\citem))$.
 Let $q = \afun(\citem)$ then it holds $\alpha(\citem) \aord \aitem$,
 thus $\citem \cord \cfun(\aitem)$ and finally $\citem \cord \cfun(\afun(\citem))$.
-We get that a concretization of an abstracted configuration of concrete system
-is greater than the original value and covers the original configuration.
-Another necessary property of abstract interpretation leading to soundness is
+We get that a concretization of an abstracted value of concrete system
+is greater than the original value and covers the original value.
+Another necessary property of abstract interpretation for soundness is
 that abstract transformers do not violate Gallois connection.
-Formally, $\alpha(I(\citem_1,\ldots,\citem_n)) \cord \atrans_I(\alpha(\citem_1),\ldots, \alpha(\citem_n))$
-where $\citem_1,\ldots,\citem_n \in \cdom$ and $\atrans_I$ is an abstract transformer
-modeling semantics of an instruction $I$ in concrete program.
+Formally, $\alpha(In(\citem_1,\ldots,\citem_n)) \cord \atrans_{In}(\alpha(\citem_1),\ldots, \alpha(\citem_n))$
+where $\citem_1,\ldots,\citem_n \in \cdom$ and $\atrans_{In}$ is an abstract transformer
+modeling semantics of an instruction $In$ in concrete program.
 These two properties of abstract domain and abstract transformers ensures
 soundness of abstract interpretation.
 
@@ -298,15 +305,15 @@ This is achieved when abstract domain is finite, a length of any strictly
 increasing chain is finite, or abstract domain satisfies the ascending chain
 condition (every strictly increasing chain is finite, although not bounded).
 Then the termination comes from Kleene's fixpoint theorem.
-When abstract domain contains infinite Kleene's sequence then
-then the abstract transformers can be chosen to allow only finite
+When abstract domain contains infinite Kleene's sequence
+then the abstract transformers can be defined to allow only finite
 Kleene's sequences during abstraction.
 When the abstract domain has infinite Kleene's sequences and
 the abstract transformers do not exclude them from computation during abstract
 interpretation then the sequences should be truncated or computation
 of fixpoint approximated by some heuristic.
-Finally, when only the finite Kleene's sequences occur then
-the termination of the method is guaranteed by Kleene's fixpoint theorem.
+Finally, the infinite sequence are excluded then termination is
+again by Kleene's fixpoint theorem.
 
 The abstraction brings inherently certain trade-off between
 precision and efficiency of the method.
@@ -314,7 +321,7 @@ When the abstraction is very precise then the analysis
 is slower because larger state space has to be explored.
 
 In abstract interpretation, the mentioned approximation of fixpoint is
-used in computation of all possible behaviors of for a given program point.
+used in computation of all possible behaviors of a given program point.
 The approximation is primarily necessary in the loop points of
 program where a new possible behavior of a program can be generated
 in each loop cycle.
@@ -330,7 +337,7 @@ The~binary operation $\wid: \adom \times \adom \rightarrow \adom$ is widening if
 \end{itemize}
 
 Informally, using widening $\wid$ instead of join $\ajoin$ is one of possible heuristic
-which will approximate fixpoint infinite Kleene's sequence.
+which will approximate fixpoint of infinite Kleene's sequence.
 It also accelerates the fixpoint computation compared with join because
 $\forall \aitem, \aitem' \in \adom: \aitem \ajoin \aitem' \aord \aitem \wid \aitem'$.
 
@@ -366,30 +373,28 @@ where more paths such as loop points or ends of conditions meet.
 The abstract transformers are applied using round robin algorithm where
 the order of transformers is defined by the original program locations.
 
-Another possible point of view to the computation of semantics of a program using
-abstract interpretation is a system of equitation.
+A~computation of semantics can be also viewed as a computation of
+a solution for a system of equitation.
 Each program location with its dedicated abstract transformer can be viewed
 as one equitation.
 The different equations share variables what leads to propagation
 of values between equitation.
 An existence of (approximate) solution of this system of equations
-is guaranteed by existence fixpoint for computation by abstract interpretation.
+is guaranteed by existence of a fixpoint in abstract interpretation.
 
 While the first mentioned approach to computing the semantics of a program is
 closer to implementation perspective, the second one is often used in papers
 focusing on theoretical aspects of abstract interpretation and
 the related mathematical background.
-\newpage
 
 \bexmp
-The example about tracking integer values will be completed
-in notion of the defined framework.
+The working example about tracking integer values will be completed
+in the notion of the defined framework.
 The example is taken from \cite{popl77}.
 We want to instantiate abstract interpretation framework for approximating
 possible values of integer variables in given program location.
-Concrete domain is $2^\mathbb{\intg}$, so each variable
-has a value from a set from $2^\mathbb{\intg}$ which it can
-gain in given program location.
+Concrete domain is $2^\mathbb{\intg}$ and a variable can have one of values
+from a set of $2^\mathbb{\intg}$ assigned to it by concrete domain.
 
 The abstract interpretation is $(\iintg, \ijoin, \interval{-\infty}{\infty}, \interval{}{}, \atrans)$ where 
 \begin{itemize}
@@ -401,7 +406,7 @@ The abstract interpretation is $(\iintg, \ijoin, \interval{-\infty}{\infty}, \in
 \end{itemize}
 
 Consider the following program in the $C$ language, where $C_i$ in a comment is labelling
-of a particular program point $i$.
+a particular program point $i$.
 
 \lstinputlisting[caption=Example program, style=customc]{example.c}
 
@@ -505,11 +510,14 @@ Another advantage of analysis of the program in abstract domain is a compact
 representation using intervals instead of set of integer values in concrete domain.
 Moreover, the used abstraction (narrowing operator) would not be possible in
 concrete domain because we are not able to work with an infinite set.
+\vspace{-0.5cm}
 \eexmp
+\vspace{0.5cm}
 
 
-As we mentioned, the framework of abstract interpretation is general and
-the preceding example is just a special case.
+As we mentioned, the framework of abstract interpretation
+is much more general and the preceding example is just
+a special case.
 Many other static analysis can be formulated as
 an abstract interpretation, e.g., data flow analysis,
 pointer analysis, or correct array access analysis.
