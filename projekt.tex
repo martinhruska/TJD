@@ -88,7 +88,7 @@ The violations of the safety properties are often bugs
 such as segmentation fault, invalid frees or memory leaks.
 Abstract interpretation based on forest automata can detect these violations
 and provide an counterexample (a particular path in analysed program
-leading to a memory bug) or it can prove correctnes of program (w.r.t. given spacification)
+leading to a memory bug) or it can prove correctness of program (w.r.t. given specification)
 by generation of shape invariants representing all possible shapes which
 can be allocated on heap in a given point of analysed program.
 When we refer to shapes of heap then it means (in context of shape analysis)
@@ -99,7 +99,7 @@ of the technique separately and then their
 synthesis for the purposes of the analysis will be given.
 
 Abstract interpretation is not only a method of formal verification but
-it is a general framework for automatical definition or (sound) approximation of
+it is a general framework for automatic definition or (sound) approximation of
 program semantics (w.r.t. observed properties) from its source code.
 The crucial component of abstract interpretation is so called
 \emph{abstract domain} representing observed properties of program.
@@ -114,19 +114,19 @@ It is of course possible to pick a more precise interval such as $\interval{2}{1
 A~choice of interval depends on an abstraction function
 which maps values from concrete domain to abstract one.
 The abstract function is often compromise between precision and computational
-feasability (i.e., avoiding a state space explosion during analysis).
+feasibility (i.e., avoiding a state space explosion during analysis).
 
-A~choice of abstract domain is not completly unrestricted.
-The framwork of abstract interpretation requires to chose a domain
-overaproximating all possible behaviours of the original program.
-This means that each possible behaviour of the analysed program is included in
-behaviours of the program in abstract domain.
-Such overaproximation is \emph{sound} because it will not miss any
-behaviour of the original program.
-On the other hand, a weakness of this approaoch is \emph{incompletness}\,---\,
-adding the behaviours of program not presented in the original semantics
+A~choice of abstract domain is not completely unrestricted.
+The framework of abstract interpretation requires to chose a domain
+overapproximation all possible behaviors of the original program.
+This means that each possible behavior of the analysed program is included in
+behaviors of the program in abstract domain.
+Such overapproximation is \emph{sound} because it will not miss any
+behavior of the original program.
+On the other hand, a weakness of this approach is \emph{incompleteness}\,---\,
+adding the behaviors of program not presented in the original semantics
 
-One can ask for the reasons of the overaproximation when it leads to
+One can ask for the reasons of the overapproximation when it leads to
 imprecise information about program semantics.
 The reasons are two.
 The first and the main one is that the abstraction (representation in abstract domain) gives
@@ -142,7 +142,7 @@ or as a support for debugging (e.g. abstract interpretation can provide data flo
 
 The other essential part of this work is forest automata (FA) theory.
 Forest automata were introduced in \cite{cav11}.
-They are basically tuples of tree automata (TA) (automata similiar to finite automata
+They are basically tuples of tree automata (TA) (automata similar to finite automata
 but they accepts trees instead of words) which are interconnected
 by references to another TA of FA in symbols from alphabet of forest automaton.
 Forest automata have been designed directly for shape analysis and
@@ -155,16 +155,16 @@ These tuples of trees can be accepted by forest automata as the members of their
 Therefore forest automata can represent (by their languages) the possible shapes of heaps
 and so they can be used as an abstract domain.
 The abstraction techniques over forest automata were also designed
-to overaproximate represented state space and makes possible for analysis to terminate.
+to approximate represented state space and makes possible for analysis to terminate.
 
 Forest automata based abstract interpretation is done by (i) using
 forest automata as an abstract domain, (ii) definition of the appropriate
-operations over forest automata modelling statements in program
+operations over forest automata modeling statements in program
 modifying dynamic data structures and (iii) using abstraction over FA
 to enable computing all possible shapes of heap in particular
 program points.
 The method has ability to analyse complex dynamic data structures
-such as skiplist of the second and the third level which are not
+such as skip-list of the second and the third level which are not
 automatically analysable by any other technique.
 
 The rest of this work is structured as follows.
@@ -176,13 +176,13 @@ described in Section \ref{sec:analysis}.
 
 \section{Abstract Interpretation Framework}
 \label{sec:aif}
-We already gave some intuition about priciples of abstract interpretation in the introduction,
+We already gave some intuition about principles of abstract interpretation in the introduction,
 this sections provides with more formal and deep description of method.
 First, the mentioned example about tracking integer variables is completed by
-other ingrediences of abstract interpretation to deepen the intuition.
+other ingredients of abstract interpretation to deepen the intuition.
 Then the formal definition of abstract interpretation is given, construction of its parts
 explained and its properties described.
-Finally an algorithm for computing semantics (or its overaproximation) of program
+Finally an algorithm for computing semantics (or its overapproximation) of program
 using abstract interpretation is presented.
 
 Consider again the example of the abstract interpretation for tracking
@@ -190,14 +190,14 @@ the possible values of integer variables.
 The concrete domain is a set of sets of integers $2^\mathbb{Z}$ (for simplification
 we will not consider overflows of integer variables etc.).
 The statements of programming language changing values of the variables
-(e.g., assigment or incrementation) are called \emph{concrete transformers}.
-A~concrete analysis over the concrete domain with the conrete transformers
+(e.g., assignment or increment) are called \emph{concrete transformers}.
+A~concrete analysis over the concrete domain with the concrete transformers
 would led to non-termination of analysis because infinite space may arise.
 The non-termination problem can be addressed by doing the analysis in abstract domain.
 The abstract domain is a set of intervals over $\mathbb{Z}$.
 
 To model the semantics of program in abstract domain, it is necessary to define
-abstract transformers modelling the concrete semantics.
+abstract transformers modeling the concrete semantics.
 The abstract transformers should reflect an effect of a concrete transformer
 on the properties tracked by abstract interpretation.
 In our example, consider the variables $x$ and $y$ assigned values $(-\infty,-100\rangle$
@@ -239,9 +239,9 @@ $I=(\adom, \ajoin, \aord, \asup, \ainf, \atrans)$ where
 \end{itemize}
 
 
-$(\adom, \ajoin, \aord, \top, \perp)$ forms a complete semilattice.
+$(\adom, \ajoin, \aord, \top, \perp)$ forms a complete semi lattice.
 
-Abstract transformers can be specified by formalization of behaviour of concrete instructions
+Abstract transformers can be specified by formalization of behavior of concrete instructions
 of program using e.g., denotational or operational semantics w.r.t. properties tracked
 by abstract interpretation.
 Therefore when a programming language has a well-defined semantics then
@@ -250,9 +250,9 @@ of a program written in this programming language.
 
 The most important characteristics of abstract interpretation
 are going to be described in the following section.
-Since abstract interpretation overaproximates possible behaviours of
+Since abstract interpretation overapproximates possible behaviors of
 the concrete system it is a \textbf{sound} method.
-A~prove of soudness will be informally described using
+A~prove of soundness will be informally described using
 two auxiliary functions $\afun, \cfun$ for switching between abstract and concrete domain.
 An abstraction function $\afun: \cdom \rightarrow \adom$ assigns to an item from
 concrete domain an item form abstract domain and a concretization function
@@ -273,24 +273,24 @@ Let $q = \afun(\citem)$ then it holds $\alpha(\citem) \aord \aitem$,
 thus $\citem \cord \cfun(\aitem)$ and finally $\citem \cord \cfun(\afun(\citem))$.
 We get that a concretization of an abstracted configuration of concrete system
 is greater than the original value and covers the original configuration.
-Another necessary property of abstract interpretation leading to soudness is
+Another necessary property of abstract interpretation leading to soundness is
 that abstract transformers do not violate Gallois connection.
 Formally, $\alpha(I(\citem_1,\ldots,\citem_n)) \cord \atrans_I(\alpha(\citem_1),\ldots, \alpha(\citem_n))$
 where $\citem_1,\ldots,\citem_n \in \cdom$ and $\atrans_I$ is an abstract transformer
-modelling semantics of an instruction $I$ in concrete program.
-These two properties of abstract domain and abstract transfomers ensures
+modeling semantics of an instruction $I$ in concrete program.
+These two properties of abstract domain and abstract transformers ensures
 soundness of abstract interpretation.
 
 On the other hand, abstract interpretation is not \textbf{complete}.
 The fact $\citem \cord \cfun(\afun(\citem))$ (a concretization of abstracted value
 is something greater) implies that an abstraction of concrete value may lead
-to overaproximation of possible behaviours.
+to overapproximation of possible behaviors.
 This is undesirable in the applications such as formal verification
-where the behaviours added by overaproximation can contain
+where the behaviors added by overapproximation can contain
 a violation of the checked properties.
 
-A~possible solution of problems caused by incompletness is a refinement of the abstraction.
-However, an immoderate refinement can led to infeasable computational complexity
+A~possible solution of problems caused by incompleteness is a refinement of the abstraction.
+However, an immoderate refinement can led to infeasible computational complexity
 or even to nontermination of the method.
 Generally, \textbf{termination} of abstract interpretation is guaranteed
 when abstract domain $\adom$ satisfies that Kleene's sequence is finite \cite{popl77}.
@@ -314,11 +314,11 @@ When the abstraction is very precise then the analysis
 is slower because larger state space has to be explored.
 
 In abstract interpretation, the mentioned approximation of fixpoint is
-used in computation of all possible behaviours of for a givem program point.
-The approximation is primarly necessary in the loop points of
-progam where a new possible behaviour of a program can be generated
+used in computation of all possible behaviors of for a given program point.
+The approximation is primarily necessary in the loop points of
+program where a new possible behavior of a program can be generated
 in each loop cycle.
-This could lead to unbounded sequence of possible behaviours and
+This could lead to unbounded sequence of possible behaviors and
 nontermination of the analysis.
 A~concept of \emph{widening} is introduced to resolve such cases.
 The~binary operation $\wid: \adom \times \adom \rightarrow \adom$ is widening iff:
@@ -336,7 +336,7 @@ $\forall \aitem, \aitem' \in \adom: \aitem \ajoin \aitem' \aord \aitem \wid \ait
 
 The opposite operation to widening is \emph{narrowing}.
 While widening accelerates computation narrowing
-refines the overaproximation to get a more precise information.
+refines the overapproximation to get a more precise information.
 Formally, the binary operation $\nar: \adom \times \adom \rightarrow \adom$
 is widening iff:
 \begin{itemize}
@@ -350,7 +350,7 @@ Although the widening refines the abstraction it does not
 break conditions guaranteeing fixpoint computation or approximation
 what comes from the second point of widening definition.
 
-We defined abstact interpretation and its basic properties
+We defined abstract interpretation and its basic properties
 but we have not mentioned how to use it for computing
 semantics of program.
 Consider a program $P$ with program points denoted $P_i$
@@ -358,7 +358,7 @@ where $i$ is an index of a program location.
 We set the initial values of the tracked semantics properties
 to $\ainf$ for each program point $i$.
 Then the corresponding abstract transformers in the given program point
-are applied repetatively until a fixpoint in each location is reached.
+are applied repetitively until a fixpoint in each location is reached.
 The changes in tracked values in one program locations are propagated to each
 iteration to the subsequent locations.
 Join, widening (and if needed also narrowing) is applied at the program points
@@ -369,13 +369,13 @@ the order of transformers is defined by the original program locations.
 Another possible point of view to the computation of semantics of a program using
 abstract interpretation is a system of equitation.
 Each program location with its dedicated abstract transformer can be viewed
-as one equtiation.
-The different equitations share variables what leads to propagation
+as one equitation.
+The different equations share variables what leads to propagation
 of values between equitation.
-An existence of (aproximate) solution of this system of equitations
+An existence of (approximate) solution of this system of equations
 is guaranteed by existence fixpoint for computation by abstract interpretation.
 
-While the firest mentioned approach to computing the semantics of a program is
+While the first mentioned approach to computing the semantics of a program is
 closer to implementation perspective, the second one is often used in papers
 focusing on theoretical aspects of abstract interpretation and
 the related mathematical background.
@@ -385,9 +385,9 @@ the related mathematical background.
 The example about tracking integer values will be completed
 in notion of the defined framework.
 The example is taken from \cite{popl77}.
-We want to instantiate abstract interpretation framework for aproximating
+We want to instantiate abstract interpretation framework for approximating
 possible values of integer variables in given program location.
-Conrete domain is $2^\mathbb{\intg}$, so each variable
+Concrete domain is $2^\mathbb{\intg}$, so each variable
 has a value from a set from $2^\mathbb{\intg}$ which it can
 gain in given program location.
 
@@ -400,13 +400,13 @@ The abstract interpretation is $(\iintg, \ijoin, \interval{-\infty}{\infty}, \in
 	\item $\atrans$ will be defined on demand for instructions used in the following example program
 \end{itemize}
 
-Consider the following program in the $C$ language, where $C_i$ in a comment is labeling
+Consider the following program in the $C$ language, where $C_i$ in a comment is labelling
 of a particular program point $i$.
 
 \lstinputlisting[caption=Example program, style=customc]{example.c}
 
 The only integer variable in program is $x$. As the next step,
-the system of equitations for the program will be assembled
+the system of equations for the program will be assembled
 to compute the possible abstract values of $x$ in each program point.
 But first we have to define the following two operators:
 \begin{itemize}
@@ -414,7 +414,7 @@ But first we have to define the following two operators:
 	\item $\cap: \interval{x}{x'} \cap \interval{y}{y'} = \interval{max(x,y)}{min(x,y)}$
 \end{itemize}
 
-The equitations are following:
+The equations are following:
 \begin{enumerate}
 	\item $C_0 = \interval{}{}$
 	\item $C_1 = \interval{1}{1}$
@@ -425,12 +425,12 @@ The equitations are following:
 \end{enumerate}
 
 The semantics of $C_1 = \interval{1}{1}$ is that the variable $x$ has a value from interval $\interval{1}{1}$
-at the program point $C_1$. The semantics of the other equitations are analogical.
+at the program point $C_1$. The semantics of the other equations are analogical.
 
 If we start computation of fixpoint using just $\ijoin$ operator the computation takes $101$ steps
 before the fixpoint is reached.
 That is maximal number of iteration of the \texttt{while} cycle.
-The possitive message is that the computation will terminate, the negative one
+The positive message is that the computation will terminate, the negative one
 is that it will take quite a long time for such a simple program.
 Therefore we introduce widening $\wid$ defined as follows:
 \begin{itemize}
@@ -482,9 +482,9 @@ this definition:
 		\interval{(x == -\infty)\,?\,y : min(x,y)}{(x' == \infty)\,?\,y' : max(x',y')}$
 \end{itemize}
 
-We update $2.$ equtation using narrowing:
+We update $2.$ equitation using narrowing:
 $C_2 = C_2 \nar (C_1 \ijoin C_4)$.
-The computed solution of equitations will be refined in the following iterations:
+The computed solution of equations will be refined in the following iterations:
 \begin{enumerate}
 	\setcounter{enumi}{2}
 	\item \hspace{-0.5em} iteration:
@@ -518,10 +518,10 @@ pointer analysis, or correct array access analysis.
 \label{sec:fa}
 
 This section gives an introduction to forest automata.
-First the definition of the tress and graphs are given.
+First, the definition of the tress and graphs are given.
 Then the automata accepting them are defined.
 The goal is to introduce the automata in a general way
-but we will aim mainly to the aspects needed for abstract interpretation.
+but with respect to the aspects needed for abstract interpretation.
 
 \subsection{Graphs, Trees and Forests}
 \label{sec:graph}
@@ -533,12 +533,13 @@ A~symbol $a_i$ is the $i$-th symbol of a word $w = a_1 \cdots a_n$ over an alpha
 \subsubsection{Graphs and Trees}
 \label{subsec:graph}
 We need for purposes of graphs introduce a \emph{ranked alphabet}.
-Intuitively, it is an alphabet which symbols have an integer rank.
-When a symbol with a given rank $n$ appears in a labelled graph
+Intuitively, it is an alphabet with symbols having an integer rank.
+When a symbol with a given rank $n$ appears in a la belled graph
 then it is required for a symbol to be over exactly $n$ edges
 leading from one node to $n$ successors.
-Formally, a~\emph{ranked alphabet} is a finite set of symbols $\Sigma$
-and a related mapping $\funcdecl{\#}{\Sigma}{\mathbb{N}}$ assigning to a symbol its rank.
+Formally, a~\emph{ranked alphabet} is a pair $(\Sigma, \#)$ where $\Sigma$ is
+a finite set of symbols and $\funcdecl{\#}{\Sigma}{\mathbb{N}}$ is a related mapping
+assigning to a symbol its rank.
 A~(directed, ordered, labelled) \emph{graph} is a total map $\funcdecl{g}{V}{\Sigma \times V^{*}}$ where $V$ is a finite set of nodes.
 We call the symbols from $\Sigma$ \emph{labels} in context of the graphs.
 The map $g$ maps each node $v\in V$ to:
@@ -546,7 +547,7 @@ The map $g$ maps each node $v\in V$ to:
 	\item a label $\alpha \in \Sigma$ that we denote by $l_g(v)$,
 	\item a sequence of \emph{successors} $(v_1 \cdots v_n) \in V^n$ for $n \in \mathbb{N}$.
 		We denote successors by $S_g(v)$ and $v_i$ is denoted by $S^i_g(v)$.
-	\item symbol $l_g(v)$ is such that $\#(l_g(v)) = |S_g(v)|$.
+	    Symbol $l_g(v)$ is such that $\#(l_g(v)) = |S_g(v)|$.
 \end{enumerate}
 
 A~pair $v \mapsto (a, v_1 \cdots v_n)$ where $v, v_1, \ldots, v_n \in V$,
@@ -561,11 +562,11 @@ $idg(v') = |\{(v \mapsto (a, v_1 \cdots v_n),i)) \,|\, v~\mapsto (a, v_1 \cdots 
 When a node $v' \in V$ has $idg(v') > 1$ it is called a \emph{join}.
 
 A~special case of a graph is a~\emph{tree}.
-Informally, a tree is a graph which each node is
+Informally, a tree is a graph where each node is
 a~successor of at most one of the other nodes.
 The node which is not a successor of any node is called \emph{root}.
-Formally, $t$ is a graph which is either empty, or it has exactly one root and $\forall v~\in V: idg(v) \leq 1$ (informally,
-each node is a successor of at most one of the other nodes).
+Formally, $t$ is a graph which is either empty, or it has exactly one root and $\forall v~\in V: idg(v) \leq 1$
+(each node is a successor of at most one of the other nodes).
 
 A~\emph{path} from $v\in V$ to $v' \in V$ is a sequence $p=v_0, i_1, v_1, \ldots, i_n, v_n$ where $v=v_0, v' = v_n$
 and $\forall j \in \{1,\ldots,n\}: v_j = S^{i_j}(v_{j-1})$ ($v_j$ is the $i_j$-th successor of $v_{j-1}$).
@@ -582,7 +583,7 @@ which maps a graph to its root.
 An example of a graph with $V=\{v_1,v_2,v_3,v_4,v_5\}$ and
 the alphabet $\Sigma = \{a,b\}$ with~a ranking function $\#$ such that $\#(a) = 2$ and $\#(b) = 0$
 is in Figure \ref{fig:graph_tree}.
-This graph is also a tree.
+This graph is a tree.
 
 	\begin{figure}[bth]
 		\begin{center}
@@ -604,11 +605,10 @@ We suppose that the sets of nodes of the trees $t_1, \ldots, t_n$ are disjoint.
 The newly added symbols from $\{1,\ldots,n\}$ labelling root references are
 supposed to interconnect trees in a forest.
 E.g., when the second tree has a leaf $v$ which is a root reference labelled by $1$
-then it is symbolical connection of the leaf $v$ of the second tree
-with the root of the first tree.
-The forest $t_1 \cdots t_n$ represents the graph $\fagr$ that arises
+then it is a symbolical connection with the root of the first tree.
+The forest $t_1 \cdots t_n$ represents a graph $\fagr$ that arises
 by interconnecting roots by the related root reference.
-Formally, the graph $\fagr$ contains an edge $v \mapsto (a,v_1 \cdots v_m)$ iff $\exists i \in \{1, \ldots, n\}:\ \exists(v \mapsto (a, v_1' \cdots v_m')) \in edges(t_i):
+Formally, the graph $\fagr$ contains an edge $v \mapsto (a,v_1 \cdots v_m)$ iff $\exists t_i \in \{t_1, \ldots, t_n\}:\ \exists(v \mapsto (a, v_1' \cdots v_m')) \in edges(t_i):
 \ \forall j \in \{1,\ldots,m\}: v_j = h(v_j')$ where $edges(t_i)$ is the set of all edges of the tree $t_i$ and
 \[ h(v_j') = \left\{
   \begin{array}{l l}
@@ -663,8 +663,9 @@ i.e. $cps(g_\phi)=\{v \in V\,|\, v~\in \phi \vee idg(v) > 1\}$.
 An \emph{io-forest} is straightforward extension of a forest with concept of input and output ports.
 We add a sequence of numbers which denote the trees of the forest whose roots would
 be input and output of an interconnected graph of the io-forest.
-Formally, an \emph{io-forest} is a pair $f=(t_1 \cdots t_n, \pi)$ such that $n \geq 1$ and $\pi_i \in \{1,\ldots,n\}$ where $1 \leq i \leq n$
-is a sequence of port indices, where $\pi_1$ is an index of input port and $\pi_2 \ldots \pi_{|\pi|}$ is a sequence of
+Formally, an \emph{io-forest} is a pair $f=(t_1 \cdots t_n, \pi)$ such that $n \geq 1$ and $\pi$
+is a sequence of port indices consisting of numbers $\pi_i \in \{1,\ldots,n\}$ where $1 \leq i \leq n$.
+The port index $\pi_1$ is an index of input port and $\pi_2 \ldots \pi_{|\pi|}$ is a sequence of
 the indices of the output ports.
 The indices are again unique.
 
@@ -697,7 +698,7 @@ and the index of the output port is $3$.
 \label{subsec:mcforest}
 
 It is needed for efficient manipulation with forests to define minimality and
-canonicity which clear the ways for deterministic representation of forests.
+canonicity which clear the way for deterministic representation of forests.
 %That enables deterministic manipulating with io-forest.
 An io-forest $f=(t_1 \cdots t_n, \phi)$ with the underlying graph $\otimes f$ is \emph{minimal}
 iff the roots of the trees $t_1,\ldots,t_n$ correspond to the cut-points of $\otimes f$.
@@ -745,7 +746,7 @@ quadruple $A = (Q, \Sigma, \Delta, R)$ where
 	\item $R \subseteq Q$ is a set of \emph{root states}.
 \end{itemize}
 
-TA has a following semantics.
+TA has the following semantics.
 A~\emph{run} of $A$ over a tree $t$ is mapping $\funcdecl{\rho}{dom(t)}{Q}$ such that
 $\forall v~\in dom(t)\ \exists q \xrightarrow{a} (q_1 \cdots q_n) \in \Delta:  q=\rho(v) \wedge  \forall i \in \{1, \ldots, |S(v)|\}: q_i=\rho(S(v)_i)$.
 We use $t \Rightarrow_{\rho} q$ to denote that $\rho$ is a run of $A$
@@ -771,7 +772,7 @@ it also holds $t \in L(A)$.
 \label{subsec:fa}
 
 In the same way we have extended trees to forest we define forest automaton
-accepting forests consisting of tree.
+accepting forests consisting of trees.
 
 A~\emph{forest automaton} (FA) over alphabet $\Sigma$ is a pair $F=(A_1\cdots A_n, \pi)$
 where $A_1 \cdots A_n$ is a sequence of tree automata defined over the alphabet $\Sigma \cup \{1,\ldots,n\}$
@@ -788,7 +789,7 @@ The \emph{graph language} of $F$ is the set of io-graphs $L(F) = \{\otimes f\,|\
 FA $F$ respects \emph{canonicity} if $\forall f \in L_f(F): \emph{f is canonical}$.
 
 The section about abstract interpretation introduced importance of fixpoint
-computation in thiss technique.
+computation in this technique.
 The crucial operation for checking whether an abstract interpretation
 reached fixpoint of possible abstract values in a given program point is
 checking ordering between two abstract values.
@@ -842,7 +843,7 @@ such as singly-linked lists or trees without parent pointers.
 In more general terms, they are able to represent data structures
 with bounded number of cut-points.
 If we want to represent also dynamic data structures with unbounded
-number of cut-points such as doubly-linked lists or skiplists it
+number of cut-points such as doubly-linked lists or skip-lists it
 is necessary to extend expressive power of the basic FA.
 This is done introducing hierarchical FA what are FA having FA of lower level
 as the symbols on their edges.
@@ -887,10 +888,10 @@ Forest automata of level 1 have the structured labels from $2^\Gamma$ but
 have not other forest automata in their labels.
 These FA form the set~$\Gamma_1$.
 Forest automata of \emph{level $i$} form the set $\Gamma_i$.
-A~forest automaton $F$ of level $i+i$ is defined over the ranked alphabet $2^{\Gamma \cup \Delta}$
+A~forest automaton $F$ of level $i+1$ is defined over the ranked alphabet $2^{\Gamma \cup \Delta}$
 where $\Delta$ is a subset of forest automata of level $i$ which are called \emph{boxes} of $F$.
 The set of all forest automata of all levels $\sum_{i \geq 0} \Gamma_i$ is denoted by $\Gamma^{*}$ and
-it is ordered by a total ordering $\sqsubset_{\Gamma_*}$ defined using orderding $\sqsubset$ for sub-labels.
+it is ordered by a total ordering $\sqsubset_{\Gamma_*}$ defined using ordering $\sqsubset$ for sub-labels.
 
 %The \emph{rank} of an FA $F$ is the number of its output port indices.
 The semantics of forest automata of higher level are defined
@@ -908,9 +909,8 @@ The sub-edge $e\langle i\rangle$ could be replaced by $g'$ if $\forall j \in \{1
 l_{g'}(\phi_j) = \emptyset$
 (this conditions checks whether there is no successor of $v_j$ and $\phi_j$ reachable over the same
 label from the both nodes).
-The result of replacement is denoted as .
 The result of this operation is a graph $g\subst{g'_\phi}{e\langle i\rangle}$
-obtained using the following method:
+which can be computed using the following algorithm:
 \begin{itemize}
 	\item $SE(g_0) = SE(g) \cup SE(g') \setminus \{e\langle i\rangle\}$.
 	\item $\forall j \in \{1, \ldots, n\}: \emph{the graph } g_j \emph{ is obtained from } g_{j-1} \emph{ by following procedure }$
@@ -923,7 +923,7 @@ obtained using the following method:
 \end{itemize}
 
 We used the introduced operation of sub-edge replacement to define
-the similiar methods over forest automata.
+the similar methods over forest automata.
 \begin{itemize}
 	\item \emph{Unfolding} of a graph $g$ is replacement of one of its sub-edges with a symbol, which is
 		an FA~$F'$, by a graph from language $L(F')$ of this FA.
@@ -938,69 +938,67 @@ the similiar methods over forest automata.
 A~transitive reflective closure of $\prec$ is denoted by $\prec^*$.
 A~set of all graphs obtained by repeated application of unfolding from
 a graph $g$ over ranked alphabet $\Gamma$ is called \emph{$\Gamma$-semantics}
-and is denoted by $\llbracket g \rrbracket_\Gamma$ or just simply $\llbracket g \rrbracket$ when it is
-clear which alphabet we speak about.
+and is denoted by $\llbracket g \rrbracket_\Gamma$ or just simply $\llbracket g \rrbracket$ when
+the alphabet is obvious from context.
 Formally defined, $\Gamma$-semantics is the set of graphs $g'$ such that $g \prec^* g'$.
-$\Gamma$-semantics  Finally, \emph{$\Gamma$-semantics} is defined for a FA $F$ of higher level as
+Finally, \emph{$\Gamma$-semantics} is defined for a FA $F$ of higher level as
 $\llbracket F \rrbracket = \bigcup_{g_\phi \in L(F)} (\llbracket g \rrbracket \times \{\phi\})$.
 
 The extension of canonicity to automata of higher level is straightforward.
 A~FA $F$ is canonicity respecting if $\forall f \in L_f(F): \emph{f is canonical}$.
 The language inclusion checking is again possible in the component-wise way like in the case of basic FA,
-as it is proved in \cite{forester:techrep}.
+as it is proved in \cite{cav11}.
 However, the testing language inclusion with the same algorithm used for the non-hierarchical FA
-is sound but incomplete because the structured labels are compared as uninterpreted symbols and their semantics
-is not considered.
+is sound but incomplete because semantics of the structured labels is omitted
+and they are treated like non-structured symbols.
 
 \section{Forest Automata as an Abstract Domain}
 \label{sec:analysis}
 
-This section connects introduced notions of abstract interpretation
-and forest automata to a working verification procedure for shape analysis.
-As we mentioned, the goal of shape analysis is to prove
-absence of memory bugs such as segmentation fault or invalid free
-in programs manipulating dynamic data structures.
-We need to be able to represent dynamic data structures
+This section connects abstract interpretation
+and forest automata to a working verification method for shape analysis.
+We need to represent dynamic data structures
 using forest automata as an abstract domain and
-also to model commands manipulating the data structures
+also to model commands manipulating dynamic data structures
 as abstract transformers over forest automata.
 Both issues will be covered in this section together with
 other parts of abstract interpretation such as join or widening
 over forest automata.
 
 \subsection{Heaps and Forests}
-So far we use notion of heap very informally but it is necessary to introduce
-it in more technical terms for definition abstract interpretation based on forest automata.
+So far we use notion of heap very informally but it is necessary to define
+it in more technical terms for description of forest automata as an abstract domain.
 Consider a heap with allocated dynamic data structures.
-It is possible to model this heap as a graph with nodes representing
+The heap can be viewed as a graph where the nodes of graph represents
 allocated memory cells.
 The edges between nodes of graph does not represent the pointers in data structures
-as one could expect but these pointers are represented by structured labels over the edges.
+as one might expect but these pointers are represented by structured labels over the edges.
 The elements of structured labels are of the two kinds.
 The first ones are so called \emph{pointer selectors} forming set $PSel$ representing
 the mentioned pointers connecting two memory nodes.
 The other ones are so called \emph{data selectors} forming set $DSel$ representing
-data of data domain $\mathbb{D}$ stored in a memory node.
+values of data domain $\mathbb{D}$ stored in a memory node.
 The labels are from the set $2^\Gamma$ where $\Gamma = PSel \cup DSel \times \mathbb{D}$.
 Pointer selectors also contain two special values\,---\,$null$ and $undefined$.
 Then the possible content of a memory node is represented by structured labels of
 edges leading from this node.
 The graphs with unbounded number of cut-points are represented by hierarchical
-forest automata by folding a repeating part of graph causing unboundedness into a box.
+forest automata by folding a repeating part of graph causing unboudness into a box.
 Further we extend the graphs to io-graphs where the ports of io-graph are nodes pointed
 by a variable (i.e. a memory node pointed by a pointer variable).
 
-In order to represent an io-graph modelling heap by forest automata,
-we need to decompose such an io-graph to a forest what is done in the follwing way.
-First, the cutpoints of the io-graph are indentified and numbered by
-the DFS traversal of the graph starting from the nodes pointed by the variables.
-Then the graph is split in these points.
+In order to represent an io-graph modeling heap by forest automata,
+we need to decompose such an io-graph to a forest what is done in the following way.
+First, the cut-points of the io-graph are identified and numbered by
+a DFS traversal of the graph starting from the nodes pointed by the variables.
+Then the graph is split in these cut-points.
 The splitting creates a set of trees with the cut-points as their roots.
 We label the edges leading to the cut-points before splitting by root
-references with the number assigned to the cut-point.
+references with a number assigned to the cut-point in the DFS traversal.
 Finally, we have a tuple of trees interconnected by root references.
+Trees in tuples should be ordered by numbers assigned to cut-points in the DFS traversal.
 Since the tuples of trees can be accepted by forest automata it is
-possible to represent set of heap io-graphs by forest automaton using this method.
+possible to represent set of heap io-graphs by forest automaton.
 
 \subsection{Forming abstract interpretation}
 When we described correspondence between heaps and forest automata
@@ -1009,7 +1007,7 @@ The concrete domain is for each program point a set of pairs $(\sigma, H)$
 where $\sigma$ is a mapping assigning each variable to a node in heap graph,
 to $null$ or to $undefined$, and $H$ is a heap io-graph representing data
 structures allocated on graph.
-The abstract domain is for each program poiint a set of pairs $(\sigma, F)$
+The abstract domain is for each program point a set of pairs $(\sigma, F)$
 where $\sigma$ is a mapping assigning each variable to a TA in $F$,
 to $null$ or to $undefined$, and $F$ is a forest automaton representing
 set of heap io-graphs.
@@ -1024,74 +1022,79 @@ The abstraction is used for each TA of FA separately.
 So far, two kinds of abstraction were used.
 
 The first is so called \emph{height abstraction}.
-This abstraction merges states of TA accepting the trees with same prefixes
-up to height $k$ where $k$ is chosen constatn.
+This abstraction merges states of a TA $T$ accepting the trees with same prefixes
+up to height $k$ where $k$ is chosen constant.
 Formally, $q \equiv q' \defarrow L(q)_{\leq k} = L(q')_{\leq k}$
 where $L(p)_{\leq k} = \{t'\,|\, t \in L(q) \wedge t' \emph{ is obtained from } t \emph{ by restriction up to height k}\}$
-and states $p,q,q'$ are states of TA.
+and states $p,q,q'$ are states of TA $T$.
 
-Another kind of abstaction is so called \emph{predicate abstraction}.
+Another kind of abstraction is so called \emph{predicate abstraction}.
 A~set of predicates $\predset=\{\pred_1, \ldots, \pred_n\}$ is needed for this abstraction.
 The states in TA merged by this abstraction are the one which have an non-empty
 intersection with the same set of predicates.
-Formally, $q \equiv q' \defarrow
+Formally, let $T=(Q_T, \Sigma_T, \Delta_T, R_T)$ be a TA then $q \equiv q' \defarrow
 (\forall \pred \in \predset: \langstate{T}{q} \cap \pred \neq \emptyset
 \Leftrightarrow \langstate{T}{q'} \cap \pred \neq \emptyset)$
 where $q,q'$ are states of TA $T$.
 The algorithm for computing states to be merged is following.
 The product of TA $T$ with each of TA representing predicates $\mathbb{P}$ is created.
-The states of TA $T$ are in product states of created tree automata with different
+The states of TA $T$ are in the product states of the created tree automata with the different
 states of TA representing predicates.
 The states of TA $T$ which are in pairs of the product states with the same states are merged during
 the abstraction.
 Let formalize this idea.
-Consider that the set of predicates $\predset$ is represented by the set of TA
+Consider the set of predicates $\predset$ represented by the set of TA
 $T=\{\predauti{1}, \ldots, \predauti{m}\}$.
 Each of product automata $T \times \predauti{i}$, where $1 \leq i \leq n$, has the state set
 consisting of the product states of the form $(p,q) \in Q_T \times Q_{\predauti{i}}$.
-Consider the auxiliary function $m$ that labels
+Consider the auxiliary function $m$ labelling
 each state of $A$ by the states of the predicate tree automata,
 i.e., the function $m: Q_T \rightarrow 2^{Q_{\predauti{1}} \cup \ldots
 \cup Q_{\predauti{m}}}$ is defined as follows: $m(p) = \{q \in Q_{\predauti{1}} \cup \ldots \cup Q_{\predauti{m}}\,|\,
-\exists T~\times \predauti{i}: (p,q) \in Q_{T} \times Q_{\predauti{i}}\}$.
-The equivalence relation ${\equiv} \subseteq {Q \times Q}$ is then constructed
-such that ${(p_1,p_2)} \in {\equiv} \defarrow m(p_1) = m(p_2)$.
-
-The weakness of forest automata approach to abstract interpretation is the absence of
-the narrowing operation.
-This comes from the fact that forest automata based shape analysis have properties
-of abstract interpretation but it was mainly designed on the basis of abstract
-regular model checking.
-Therefore when a spurious error is found in program (error that is not presented in
-program but was caused by overaproximating abstraction) then it is necessary
-to restart the whole abstract interpretation using refined abstraction.
-The height abstraction is refined by increasing the height $k$ and the predicate
-abstraction is refined by predicate learnt from spurious counterexample \cite{hruskamt}.
+\exists\,T\times\predauti{i}: (p,q) \in Q_{T} \times Q_{\predauti{i}}\}$.
+The equivalence relation ${\equiv} \subseteq {Q \times Q}$ is defined:
+${(p_1,p_2)} \in {\equiv} \defarrow m(p_1) = m(p_2)$.
 
 When the widening is done at the loop point the language inclusion between
 FA before and after widening to check whether a fixpoint has been reached.
-The widening is then repeated until the fixpoint is reached.
+The widening is repeated until the fixpoint is reached.
 Folding over FA and normalization is also done after each widening (and
-before checking inclusion) to bounded number of process unbounded number
-of cut-points and to obtain unique representation of FA before
-inclusion checking.
+before checking inclusion) to bounded number the number of cut-points
+and to obtain unique representation of FA before inclusion checking.
+If the widening would not be done here then an unbounded number of cut-points
+may arise.
+
+The weakness of forest automata approach to abstract interpretation is absence of
+the narrowing operation.
+This comes from the fact that forest automata based shape analysis has properties
+of abstract interpretation but it was mainly designed on the basis of abstract
+regular model checking.
+Therefore when a spurious error is found in program (error that is not presented in
+program but was caused by overapproximating abstraction) then it is necessary
+to restart the whole abstract interpretation with a refined abstraction.
+The height abstraction is refined by increasing the height $k$ and the predicate
+abstraction is refined by predicate learned from spurious counterexample \cite{mt:hruska}.
+The predicate abstraction approach is more precise because the refinement is done
+using a predicate derived from a spurious error.
+This predicate prevents reaching exactly the spurious error and
+it does not weaken abstraction too much.
 
 \subsection{Abstract transformers}
 The chosen abstract transformers will be described in this section.
-We will cover mainly abstract transfomers related to concrete transfomers
+We will cover mainly abstract transformers related to concrete transformers
 manipulating heap structures.
 The description given here will be more abstract compare to real implementation
-in the \emph{Forester} \cite{forester} tool which implements shape analysis
+in the \emph{Forester} tool \cite{www:forester} which implements shape analysis
 based on forest automata.
 In Forester, one concrete transformer is translated to more abstract transformers
 which are implemented as instructions of Forester microcode.
 However, the description of the microcode would be full of technical details
-darkening the essence of abstract operations, therefore the abstract transfomers
+darkening the essence of abstract transformers, therefore the abstract transformers
 will be described from the perspective of their effects on abstract domain
-omiting implementation details.
+omitting implementation details.
 
 \begin{itemize}
-	\item \texttt{malloc(size)} \,---\, Alocates a new memory node with given $size$.
+	\item \texttt{malloc(size)} \,---\, Allocates a new memory node with given $size$.
 		In abstract domain, this is done by creating a new tree automaton which
 		is added to forest automaton representing current heap.
 		The new tree automaton has one state with transition labelled by
@@ -1102,15 +1105,18 @@ omiting implementation details.
 		The isolation means that when a selector points to an allocated memory
 		then a new TA for representation of this memory is created and
 		the original selector is replaced by root reference to the new TA.
-	\item \texttt{x = y->sel} \,---\, When a selector leads to a node which is root
+	\item \texttt{x = y->sel} \,---\, When a selector leads to a node $n$ which is root
 		reference then the variable $x$ will be redirected to point to
 		root of the referenced TA.
 		I.e., $\sigma(x)$ is changed to the referenced TA in abstract domain.
-		Otherwise, a node in TA $t$ pointed by selector \texttt{y->sel} is isolated to a new TA
-		containing part of TA $t$ reachable from the node.
-		The original occurence of the node is replaced by root reference to the new TA which is
-		added to FA representing heap.
+		Otherwise, a node $n$ in TA $t$ pointed by selector \texttt{y->sel} is isolated to a new TA
+		containing part of TA $t$ reachable from the node $n$.
+		The original occurrence of the node $n$ is replaced by root reference
+		to the new TA which is added to FA representing heap.
 		Then the variable $x$ will point also the new TA.
+		It is possible that the selector \texttt{y->sel} is folded
+		in a box and then it is necessary to perform unfolding
+		to access the selector.
 		
 	\item \texttt{x->sel = y} \,---\, Firstly, the node pointed by selector \texttt{x->sel}
 		is isolated to the new TA as in the previous case.
@@ -1118,7 +1124,9 @@ omiting implementation details.
 		Then the node pointed by \texttt{x->sel} is replaced
 		by root reference to TA pointed by $y$ (note, that
 		$y$ is definitely pointing to a TA which was created
-		during the isolation or was pointed by $y$ before isolation.
+		during the isolation or was pointed by $y$ without need of isolation).
+		The unfolding may also be needed in this transformer for
+		the same reasons as in the previous one.
 	
 	\item \texttt{x = y} \,---\, The value $\sigma(x)$ is updated in abstract
 		domain to contain the same value as $\sigma(y)$.
@@ -1129,14 +1137,14 @@ omiting implementation details.
 	
 \end{itemize}
 
-It is also neccesary to perform garbage checking after each of the described operations.
+It is also necessary to perform garbage checking after each of the described operations.
 That is done by checking whether all tree automata in FA representing heap are accessible
 from nodes pointed by pointer variables.
 
 \section{Conclusion}
 
 This work presented join of abstract interpretation and forest automata
-for purposes shape analysis.
+for the purposes of shape analysis.
 First, the theory of abstract interpretation was presented then forest automata
 were covered.
 Finally, a combination of both and its application in shape analysis
@@ -1144,18 +1152,18 @@ was described.
 
 Forest automata have capability to model complex data structures
 and it is possible to analyse program manipulating these data structures
-such as skiplist of the second and the third level, trees with parent pointers
+such as skip-list of the second and the third level, trees with parent pointers
 or doubly-linked list \cite{sv-comp}.
 
-The biggest advatages of this approach is its flexibility and scalability.
+The biggest advantages of this approach is its flexibility and scalability.
 It is able automatically verify different data structures without need to
-provide any specific information for different data structures manually.
+provide any specific information manually.
 Forest automata based verification beats separation logic methods in this aspect
 because they need often manually crafted predicates solving corner cases in verification
 of different data structures.
 Scalability of forest automata lies in ability to make a local
 change in a heap without need to propagate this change all over
-what can lead to high computation complexity.
+what can lead to high computational complexity.
 This is in contrast to abstract regular model checking which
 misses this scalability feature.
 
@@ -1163,16 +1171,16 @@ On the other hand, the disadvantage of forest automata based verification
 is current lack of the more precise abstraction refinement.
 The mentioned predicate abstraction is currently designed only for
 non-hierarchical forest automata what disable verification of
-data structrues such as red-black trees or b+ trees.
-The lack of narrowing also leads to the necessarity to restart
+data structures such as red-black trees or b+ trees.
+The lack of narrowing also leads to the necessarity of restarting
 the analysis when a spurious counterexample is found.
 
-The possible futer development of the forest automata based shape analysis
+The possible further development of the forest automata based shape analysis
 is in resolving the mentioned weaknesses but also in improving
 the scalability by introducing methods for modular verification
-of parts of large systems without explicit knownledge about the enviroment.
+of parts of large systems without explicit knowledge about the rest of system.
 It is also needed to improve an implementation of the method because
-is current state in the Forester tool is far from maturity.
+the current state of implementation in the Forester tool is far from maturity.
 
 \newpage
 \bibliography{literatura}
