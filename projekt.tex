@@ -106,7 +106,7 @@ program semantics (w.r.t. tracked properties) from its source code.
 Abstract interpretation does not track the properties of interest
 in program under its original semantics (in so called \emph{concrete domain}).
 It represents them in \emph{abstract domain}.
-This abstract representation is more conscise but lose information.
+This abstract representation is more concise but lose information.
 E.g., consider an analysis of possible values of integer variables.
 The concrete domain is formed by the set of sets of integers (a set represent possible
 values of a variable) and the abstract domain can be set of intervals over integers.
@@ -304,7 +304,7 @@ when abstract domain $\adom$ satisfies that Kleene's sequence is finite \cite{po
 This is achieved when abstract domain is finite, a length of any strictly
 increasing chain is finite, or abstract domain satisfies the ascending chain
 condition (every strictly increasing chain is finite, although not bounded).
-Then the termination comes from Kleene's fixpoint theorem.
+Then the termination comes from Tarski's fixpoint theorem \cite{tarski}.
 When abstract domain contains infinite Kleene's sequence
 then the abstract transformers can be defined to allow only finite
 Kleene's sequences during abstraction.
@@ -313,7 +313,7 @@ the abstract transformers do not exclude them from computation during abstract
 interpretation then the sequences should be truncated or computation
 of fixpoint approximated by some heuristic.
 Finally, the infinite sequence are excluded then termination is
-again by Kleene's fixpoint theorem.
+again by Tarski's fixpoint theorem.
 
 The abstraction brings inherently certain trade-off between
 precision and efficiency of the method.
@@ -374,7 +374,7 @@ The abstract transformers are applied using round robin algorithm where
 the order of transformers is defined by the original program locations.
 
 A~computation of semantics can be also viewed as a computation of
-a solution for a system of equitation.
+a solution for a system of equitation \cite{cousot81}.
 Each program location with its dedicated abstract transformer can be viewed
 as one equitation.
 The different equations share variables what leads to propagation
@@ -818,7 +818,7 @@ i.e. checking language inclusion of their tree automata one by one.
 			\item $\forall i \in \{1,\ldots,n_1\}: L(A_i^1) \subseteq L(A_i^2)$
 	\end{itemize}
 \end{lemma}
-Proof can be found in \cite{cav11}.
+Proof can be found in \cite{forester:techrep}.
 
 \bexmp
 Consider the io-forest $f_{io}=((t_1,t_2,t_3), (1,3))$ from Example \ref{ex:iograph}.
@@ -965,7 +965,7 @@ and they are treated like non-structured symbols.
 
 This section connects abstract interpretation
 and forest automata to a working verification method for shape analysis.
-We need to represent dynamic data structures
+The method needs to represent dynamic data structures
 using forest automata as an abstract domain and
 also to model commands manipulating dynamic data structures
 as abstract transformers over forest automata.
@@ -977,10 +977,10 @@ over forest automata.
 So far we use notion of heap very informally but it is necessary to define
 it in more technical terms for description of forest automata as an abstract domain.
 Consider a heap with allocated dynamic data structures.
-The heap can be viewed as a graph where the nodes of graph represents
+The heap can be viewed as a graph where the nodes of graph represent
 allocated memory cells.
 The edges between nodes of graph does not represent the pointers in data structures
-as one might expect but these pointers are represented by structured labels over the edges.
+as one might expect but these pointers are represented by the structured labels over the edges.
 The elements of structured labels are of the two kinds.
 The first ones are so called \emph{pointer selectors} forming set $PSel$ representing
 the mentioned pointers connecting two memory nodes.
@@ -988,21 +988,22 @@ The other ones are so called \emph{data selectors} forming set $DSel$ representi
 values of data domain $\mathbb{D}$ stored in a memory node.
 The labels are from the set $2^\Gamma$ where $\Gamma = PSel \cup DSel \times \mathbb{D}$.
 Pointer selectors also contain two special values\,---\,$null$ and $undefined$.
-Then the possible content of a memory node is represented by structured labels of
+The possible content of a memory node is represented using these structured labels of
 edges leading from this node.
+
 The graphs with unbounded number of cut-points are represented by hierarchical
 forest automata by folding a repeating part of graph causing unboudness into a box.
 Further we extend the graphs to io-graphs where the ports of io-graph are nodes pointed
 by a variable (i.e. a memory node pointed by a pointer variable).
 
-In order to represent an io-graph modeling heap by forest automata,
-we need to decompose such an io-graph to a forest what is done in the following way.
+In order to represent an io-graph modelling heap by forest automata,
+we need to decompose such io-graph to a forest what is done in the following way.
 First, the cut-points of the io-graph are identified and numbered by
 a DFS traversal of the graph starting from the nodes pointed by the variables.
 Then the graph is split in these cut-points.
 The splitting creates a set of trees with the cut-points as their roots.
 We label the edges leading to the cut-points before splitting by root
-references with a number assigned to the cut-point in the DFS traversal.
+references with a number assigned to the cut-point by the DFS traversal.
 Finally, we have a tuple of trees interconnected by root references.
 Trees in tuples should be ordered by numbers assigned to cut-points in the DFS traversal.
 Since the tuples of trees can be accepted by forest automata it is
@@ -1010,7 +1011,7 @@ possible to represent set of heap io-graphs by forest automaton.
 
 \subsection{Forming abstract interpretation}
 When we described correspondence between heaps and forest automata
-it is possible to define concrete and abstract domain.
+it is possible to formally define concrete and abstract domain.
 The concrete domain is for each program point a set of pairs $(\sigma, H)$
 where $\sigma$ is a mapping assigning each variable to a node in heap graph,
 to $null$ or to $undefined$, and $H$ is a heap io-graph representing data
@@ -1020,8 +1021,8 @@ where $\sigma$ is a mapping assigning each variable to a TA in $F$,
 to $null$ or to $undefined$, and $F$ is a forest automaton representing
 set of heap io-graphs.
 
-The all possible abstract configurations for each program point is computed by
-iterative application of abstract transformer until reaching of fixpoint.
+All possible abstract configurations for each program point are computed by
+iterative application of abstract transformer until reaching fixpoint.
 The unions of sets obtained by application of abstract transformers are used
 as a join at the junctions.
 At the loop points, the widening is also applied.
@@ -1030,8 +1031,8 @@ The abstraction is used for each TA of FA separately.
 So far, two kinds of abstraction were used.
 
 The first is so called \emph{height abstraction}.
-This abstraction merges states of a TA $T$ accepting the trees with same prefixes
-up to height $k$ where $k$ is chosen constant.
+This abstraction merges states of a TA $T$ accepting the trees
+with the same prefixes up to height $k$ where $k$ is chosen constant.
 Formally, $q \equiv q' \defarrow L(q)_{\leq k} = L(q')_{\leq k}$
 where $L(p)_{\leq k} = \{t'\,|\, t \in L(q) \wedge t' \emph{ is obtained from } t \emph{ by restriction up to height k}\}$
 and states $p,q,q'$ are states of TA $T$.
@@ -1044,12 +1045,12 @@ Formally, let $T=(Q_T, \Sigma_T, \Delta_T, R_T)$ be a TA then $q \equiv q' \defa
 (\forall \pred \in \predset: \langstate{T}{q} \cap \pred \neq \emptyset
 \Leftrightarrow \langstate{T}{q'} \cap \pred \neq \emptyset)$
 where $q,q'$ are states of TA $T$.
-The algorithm for computing states to be merged is following.
+The algorithm for computing states by merging is following.
 The product of TA $T$ with each of TA representing predicates $\mathbb{P}$ is created.
 The states of TA $T$ are in the product states of the created tree automata with the different
 states of TA representing predicates.
-The states of TA $T$ which are in pairs of the product states with the same states are merged during
-the abstraction.
+The states of TA $T$ which are in pairs of the product states with
+the same states are merged by the abstraction.
 Let formalize this idea.
 Consider the set of predicates $\predset$ represented by the set of TA
 $T=\{\predauti{1}, \ldots, \predauti{m}\}$.
@@ -1063,11 +1064,11 @@ i.e., the function $m: Q_T \rightarrow 2^{Q_{\predauti{1}} \cup \ldots
 The equivalence relation ${\equiv} \subseteq {Q \times Q}$ is defined:
 ${(p_1,p_2)} \in {\equiv} \defarrow m(p_1) = m(p_2)$.
 
-When the widening is done at the loop point the language inclusion between
+When the widening is done at a loop point the language inclusion between
 FA before and after widening to check whether a fixpoint has been reached.
 The widening is repeated until the fixpoint is reached.
 Folding over FA and normalization is also done after each widening (and
-before checking inclusion) to bounded number the number of cut-points
+before checking inclusion) to bounded number of cut-points
 and to obtain unique representation of FA before inclusion checking.
 If the widening would not be done here then an unbounded number of cut-points
 may arise.
@@ -1081,15 +1082,15 @@ Therefore when a spurious error is found in program (error that is not presented
 program but was caused by overapproximating abstraction) then it is necessary
 to restart the whole abstract interpretation with a refined abstraction.
 The height abstraction is refined by increasing the height $k$ and the predicate
-abstraction is refined by predicate learned from spurious counterexample \cite{mt:hruska}.
-The predicate abstraction approach is more precise because the refinement is done
-using a predicate derived from a spurious error.
-This predicate prevents reaching exactly the spurious error and
+abstraction is refined by a predicate learned from a spurious counterexample \cite{mt:hruska}.
+The predicate abstraction approach is more precise because
+the predicate prevents reaching exactly the spurious error and
 it does not weaken abstraction too much.
 
 \subsection{Abstract transformers}
 The chosen abstract transformers will be described in this section.
-We will cover mainly abstract transformers related to concrete transformers
+The description is mainly based on \cite{atva13}.
+We will cover mainly abstract transformers modelling concrete transformers
 manipulating heap structures.
 The description given here will be more abstract compare to real implementation
 in the \emph{Forester} tool \cite{www:forester} which implements shape analysis
@@ -1098,7 +1099,7 @@ In Forester, one concrete transformer is translated to more abstract transformer
 which are implemented as instructions of Forester microcode.
 However, the description of the microcode would be full of technical details
 darkening the essence of abstract transformers, therefore the abstract transformers
-will be described from the perspective of their effects on abstract domain
+will be presented from the perspective of their effects on abstract domain
 omitting implementation details.
 
 \begin{itemize}
@@ -1110,24 +1111,23 @@ omitting implementation details.
 		about size of allocated memory.
 	\item \texttt{free(x)} \,---\, Takes a node of TA pointed by $x$ and isolates all
 		its selectors in labels of transition under this node.
-		The isolation means that when a selector points to an allocated memory
+		The isolation consists in taking a selector pointing to an allocated memory
 		then a new TA for representation of this memory is created and
 		the original selector is replaced by root reference to the new TA.
 	\item \texttt{x = y->sel} \,---\, When a selector leads to a node $n$ which is root
-		reference then the variable $x$ will be redirected to point to
-		root of the referenced TA.
+		reference then the variable $x$ will be redirected to root of the referenced TA.
 		I.e., $\sigma(x)$ is changed to the referenced TA in abstract domain.
 		Otherwise, a node $n$ in TA $t$ pointed by selector \texttt{y->sel} is isolated to a new TA
 		containing part of TA $t$ reachable from the node $n$.
 		The original occurrence of the node $n$ is replaced by root reference
 		to the new TA which is added to FA representing heap.
-		Then the variable $x$ will point also the new TA.
+		Then the variable $x$ will point to this new TA.
 		It is possible that the selector \texttt{y->sel} is folded
-		in a box and then it is necessary to perform unfolding
+		in a box then it is necessary to perform unfolding
 		to access the selector.
 		
 	\item \texttt{x->sel = y} \,---\, Firstly, the node pointed by selector \texttt{x->sel}
-		is isolated to the new TA as in the previous case.
+		is isolated to a new TA as in the previous case.
 		The node pointed by $y$ is also isolated. 
 		Then the node pointed by \texttt{x->sel} is replaced
 		by root reference to TA pointed by $y$ (note, that
@@ -1153,22 +1153,22 @@ from nodes pointed by pointer variables.
 
 This work presented join of abstract interpretation and forest automata
 for the purposes of shape analysis.
-First, the theory of abstract interpretation was presented then forest automata
-were covered.
-Finally, a combination of both and its application in shape analysis
-was described.
+First, the theory of abstract interpretation was presented
+then forest automata were covered.
+Finally, a combination of both and its application
+in shape analysis were described.
 
 Forest automata have capability to model complex data structures
 and it is possible to analyse program manipulating these data structures
 such as skip-list of the second and the third level, trees with parent pointers
-or doubly-linked list \cite{sv-comp}.
+or doubly-linked list \cite{svcomp15}.
 
 The biggest advantages of this approach is its flexibility and scalability.
 It is able automatically verify different data structures without need to
 provide any specific information manually.
-Forest automata based verification beats separation logic methods in this aspect
-because they need often manually crafted predicates solving corner cases in verification
-of different data structures.
+Forest automata based verification beats separation logic methods for shape analysis
+in this aspect because they need often manually crafted predicates
+solving corner cases in verification of different data structures.
 Scalability of forest automata lies in ability to make a local
 change in a heap without need to propagate this change all over
 what can lead to high computational complexity.
@@ -1178,9 +1178,9 @@ misses this scalability feature.
 On the other hand, the disadvantage of forest automata based verification
 is current lack of the more precise abstraction refinement.
 The mentioned predicate abstraction is currently designed only for
-non-hierarchical forest automata what disable verification of
+non-hierarchical forest automata what disable a verification of
 data structures such as red-black trees or b+ trees.
-The lack of narrowing also leads to the necessarity of restarting
+The lack of narrowing also leads to necessity of restarting
 the analysis when a spurious counterexample is found.
 
 The possible further development of the forest automata based shape analysis
@@ -1188,7 +1188,7 @@ is in resolving the mentioned weaknesses but also in improving
 the scalability by introducing methods for modular verification
 of parts of large systems without explicit knowledge about the rest of system.
 It is also needed to improve an implementation of the method because
-the current state of implementation in the Forester tool is far from maturity.
+its current state in the Forester tool is far from maturity.
 
 \newpage
 \bibliography{literatura}
