@@ -542,7 +542,7 @@ A~symbol $a_i$ is the $i$-th symbol of a word $w = a_1 \cdots a_n$ over an alpha
 \label{subsec:graph}
 We need for purposes of graphs introduce a \emph{ranked alphabet}.
 Intuitively, it is an alphabet with symbols having an integer rank.
-When a symbol with a given rank $n$ appears in a la belled graph
+When a symbol with a given rank $n$ appears in a labelled graph
 then it is required for a symbol to be over exactly $n$ edges
 leading from one node to $n$ successors.
 Formally, a~\emph{ranked alphabet} is a pair $(\Sigma, \#)$ where $\Sigma$ is
@@ -552,16 +552,16 @@ A~(directed, ordered, labelled) \emph{graph} is a total map $\funcdecl{g}{V}{\Si
 We call the symbols from $\Sigma$ \emph{labels} in context of the graphs.
 The map $g$ maps each node $v\in V$ to:
 \begin{enumerate}
-	\item a label $\alpha \in \Sigma$ that we denote by $l_g(v)$,
+	\item a label $a \in \Sigma$ that we denote by $l_g(v)$,
 	\item a sequence of \emph{successors} $(v_1 \cdots v_n) \in V^n$ for $n \in \mathbb{N}$.
 		We denote successors by $S_g(v)$ and $v_i$ is denoted by $S^i_g(v)$.
 	    Symbol $l_g(v)$ is such that $\#(l_g(v)) = |S_g(v)|$.
 \end{enumerate}
 
 A~pair $v \mapsto (a, v_1 \cdots v_n)$ where $v, v_1, \ldots, v_n \in V$,
-$a \in \Sigma$ such that $g(v) = (a, v_1 \cdots v_n)$, is called an \emph{edge} of $g$.
+$a \in \Sigma$ such that $g(v) = (a, v_1 \cdots v_n)$, is called an~\emph{edge} of $g$.
 A~\emph{leaf} of $g$ is a node $v \in V$ without successor so it holds $S_g(v) = \epsilon$.
-Consider set of all sequences of successors in which a node $v' \in V$ appears, then
+Consider set of all sequences of successors such that a node $v' \in V$ appears among the successors, then
 the cardinality of this set is the \emph{in-degree} of a node $v' \in V$ (denoted by $idg_g(v')$).
 More intuitively, the in-degree of a node is a number of the incoming edges to the node.
 Formally, in-degree is defined as
@@ -585,7 +585,7 @@ The~path $p$ is \emph{cheaper} than path $p'$ iff the cost of $p$ is lexicograph
 A~node $u \in V$ is \emph{reachable} from a node $v \in V$ iff there exists a path from $v$ to $u$ or $u=v$.
 A~node $u \in V$ is a \emph{root} of the graph $g$ iff all nodes $v \in V$ are reachable from $u$
 and $u$ is not successor of any other state.
-We alternatively define a root of a graph by a mapping $\funcdecl{root}{g}{V}$
+We alternatively determine a root of a~graph by a mapping $\funcdecl{root}{g}{V}$
 which maps a graph to its root.
 
 An example of a graph with $V=\{v_1,v_2,v_3,v_4,v_5\}$ and
@@ -818,7 +818,7 @@ i.e. checking language inclusion of their tree automata one by one.
 			\item $\forall i \in \{1,\ldots,n_1\}: L(A_i^1) \subseteq L(A_i^2)$
 	\end{itemize}
 \end{lemma}
-Proof can be found in \cite{forester:techrep}.
+Proof can be found in \cite{cav11}.
 
 \bexmp
 Consider the io-forest $f_{io}=((t_1,t_2,t_3), (1,3))$ from Example \ref{ex:iograph}.
@@ -846,7 +846,7 @@ Hence the graph $\otimes f_{io} = (\otimes (t_1,t_2,t_3),(u_1,w_1))$
 \subsection{Forest Automata of Higher Level}
 \label{sec:fah}
 
-The already define forest automata are able to model basic data structures
+The already defined forest automata are able to model basic data structures
 such as singly-linked lists or trees without parent pointers.
 In more general terms, they are able to represent data structures
 with bounded number of cut-points.
@@ -924,7 +924,7 @@ which can be computed using the following algorithm:
 	\item $\forall j \in \{1, \ldots, n\}: \emph{the graph } g_j \emph{ is obtained from } g_{j-1} \emph{ by following procedure }$
 		\begin{enumerate}
 			\item Deriving a~graph $h$ by replacing the origin of the sub-edges of the $j$-th port $\phi_j$ of $g'$ by $v_j$.
-			\item Redirecting edges leading to $\phi_{j}$ to $v_j$, i.e., replacing all occurrences of $\phi_j$ in $\rng{h}$ by $v_j$
+			\item Redirecting edges from $\phi_{j}$ to $v_j$, i.e., replacing all occurrences of $\phi_j$ in $\rng{h}$ by $v_j$
 			\item Removing $\phi_j$. 
 		\end{enumerate}
 	\item Graph $g_n$ is the result (so the graph $g\subst{g'_\phi}{e\langle i\rangle}$ is the same one as $g_n$).
