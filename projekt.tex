@@ -63,7 +63,7 @@
 \maketitle
 
 \begin{abstract}
-Shape analysis is a field of static analysis focuses on verification of
+Shape analysis is a field of static analysis focusing on verification of
 programs manipulating dynamic data structures.
 An approach to shape analysis described in this work
 is based on combination of abstract interpretation and forest automata.
@@ -205,7 +205,7 @@ To model the semantics of program in abstract domain, it is necessary to define
 abstract transformers modeling the concrete semantics.
 The abstract transformers should reflect an effect of a concrete transformer
 on the properties tracked by abstract interpretation.
-In our example, consider the variables $x$ and $y$ assigned values $(-\infty,-100\rangle$
+In our example, consider the variables $x$ and $y$ with assigned values $(-\infty,-100\rangle$
 and $(-100, 100)$ in abstract domain.
 The abstract transformer corresponding to arithmetic addition $+$
 should for $x+y$ give the result $(-\infty,100)$.
@@ -246,14 +246,14 @@ $I=(\adom, \ajoin, \aord, \asup, \ainf, \atrans)$ where
 
 $(\adom, \ajoin, \aord, \top, \perp)$ forms a complete semi lattice.
 
-\subsection{Properties of Abstract Interpretation}
-
 Abstract transformers can be specified by formalization of behavior of concrete instructions
 of program using e.g., denotational or operational semantics w.r.t. properties tracked
 by abstract interpretation.
 Therefore when a programming language has a well-defined semantics then
 it is easy to use abstract interpretation as a method for computation
 of a precise program semantics written in this programming language.
+
+\subsection{Properties of Abstract Interpretation}
 
 The most important characteristics of abstract interpretation
 are going to be described in the following section.
@@ -313,7 +313,7 @@ the abstract transformers do not exclude them from computation during abstract
 interpretation then the sequences should be truncated or computation
 of fixpoint approximated by some heuristic.
 Finally, when the infinite sequence are excluded then termination is
-again guaranteed by Tarski's fixpoint theorem.
+again guaranteed by Tarski's fixpoint theorem \cite{popl77}.
 
 The abstraction brings inherently certain trade-off between
 precision and efficiency of the method.
@@ -372,7 +372,7 @@ Then the corresponding abstract transformers in the given program point
 are applied repetitively until a fixpoint in each location is reached.
 The changes in tracked values in one program locations are propagated to each
 iteration to the subsequent locations.
-Join, widening (and if needed also narrowing) is applied at the program points
+Join, widening (and if needed also narrowing) are applied at the program points
 such as loop points or ends of conditions where more paths meet.
 The abstract transformers are applied using round robin algorithm where
 the order of transformers is defined by the original program locations.
@@ -438,7 +438,7 @@ at the program point $C_1$. The semantics of the other equations are analogical.
 
 If we start computation of fixpoint using just $\ijoin$ operator the computation takes $101$ steps
 before the fixpoint is reached.
-That is maximal number of iteration of the \texttt{while} cycle.
+That is maximal number of iterations of the \texttt{while} cycle.
 The positive message is that the computation will terminate, the negative one
 is that it will take quite a long time for such a simple program.
 Therefore we introduce widening $\wid$ defined as follows:
@@ -473,7 +473,7 @@ The approximation of solution is computed in the following iterations:
 		               = \interval{1}{1} \wid \interval{1}{2} = \interval{1}{\infty}$
 			\item $C_3 = \interval{1}{100}$
 			\item $C_4 = \interval{2}{101}$
-			\item $C_5 = \interval{101}{\inf}$
+			\item $C_5 = \interval{101}{\infty}$
 		\end{itemize}
 \end{enumerate}
 
@@ -654,7 +654,6 @@ The graph $\otimes t_1,t_2,t_3$ obtained by interconnecting trees in the forest 
 	  \label{fig:forest_graph}
 	\end{center}
 	\end{figure}
-\vspace{-0.5cm}
 
 %\subsubsection{Graphs and Forests with Ports}
 %\label{subsec:gfp}
@@ -1071,7 +1070,7 @@ The widening is repeated until the fixpoint is reached.
 Folding over FA and normalization is also done after each widening (and
 before checking inclusion) to bounded number of cut-points
 and to obtain unique representation of FA before inclusion checking.
-If the widening would not be done here then an unbounded number of cut-points
+If folding would not be done here then an unbounded number of cut-points
 may arise.
 
 The weakness of forest automata approach to abstract interpretation is absence of
@@ -1174,7 +1173,7 @@ provide any specific information manually.
 Forest automata based verification beats separation logic methods for shape analysis
 in this aspect because they need often manually crafted predicates
 solving corner cases in verification of different data structures.
-Scalability of forest automata lies in ability to make a local
+Scalability of forest automata lies in an ability to make a local
 change in a heap without need to propagate this change all over
 an automaton what can lead to high computational complexity.
 This is in contrast to abstract regular model checking which
